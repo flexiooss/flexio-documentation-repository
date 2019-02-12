@@ -12,6 +12,11 @@
     <artifactId>flexio-api-documentation-service</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
 
+    <properties>
+        <docker.image.namespace>${flexio.docker.namespace}</docker.image.namespace>
+        <service.class.name>io.flexio.services.config.FlexioConfigServices</service.class.name>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
