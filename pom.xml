@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.flexio.services</groupId>
+        <artifactId>flexio-services</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>io.flexio.services.api.documentation</groupId>
+    <artifactId>flexio-api-documentation</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <api.spec>${project.parent.artifactId}.raml</api.spec>
+    </properties>
+
+
+  <modules>
+    <module>flexio-api-documentation-api</module>
+    <module>flexio-api-documentation-api-spec</module>
+    <module>flexio-api-documentation-service</module>
+    <module>flexio-api-documentation-client</module>
+  </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.flexio.services.api.documentation</groupId>
+                <artifactId>flexio-api-documentation-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.flexio.services.api.documentation</groupId>
+                <artifactId>flexio-api-documentation-api-spec</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.flexio.services.api.documentation</groupId>
+                <artifactId>flexio-api-documentation-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.flexio.services.api.documentation</groupId>
+                <artifactId>flexio-api-documentation-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

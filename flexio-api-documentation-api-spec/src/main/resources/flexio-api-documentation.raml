@@ -1,0 +1,129 @@
+#%RAML 1.0
+title: FlexioApiDocumentation
+version: v1
+description: Flexio FlexioApiDocumentation API
+baseUri: https://api.flexio.io/flexio-api-documentation
+mediaType: application/json
+
+/:
+  displayName: Groups
+  get:
+   description: Liste des groupes
+   responses:
+    200:
+      body: Group[]
+    404:
+      body: Error
+    500:
+      body: Error
+
+/{group}:
+  displayName: Modules
+  uriParameters:
+   group: string
+  get:
+   description: Liste des modules du groupe
+   responses:
+    200:
+      body: Module[]
+    400:
+      body: Error
+    404:
+      body: Error
+    500:
+      body: Error
+  /{module}:
+   displayName: Versions
+   uriParameters:
+    module: string
+   get:
+    description: Liste des versions d'un module
+    responses:
+      200:
+       body: Version[]
+      400:
+        body: Error
+      404:
+       body: Error
+      500:
+       body: Error
+   /{version}:
+    displayName: Classifiers
+    uriParameters:
+      version: string
+    get:
+      description: Liste des classifiers d'un module
+      responses:
+       200:
+        body: Classifier[]
+       400:
+        body: Error
+       404:
+        body: Error
+       500:
+        body: Error
+    /{classifier}:
+      displayName: File
+      uriParameters:
+       classifier: string
+      get:
+       description: Recupere le fichier
+       responses:
+        200:
+          body: File[]
+        400:
+          body: Error
+        404:
+          body: Error
+        500:
+          body: Error
+      post:
+       description: Ajout d'un classifier
+       body: file
+       responses:
+        201:
+          headers:
+           Location: string
+        400:
+          body: Error
+        404:
+          body: Error
+        500:
+          body: Error
+
+
+types:
+  Group:
+    type: object
+    properties:
+      name: string
+  Module:
+    type: object
+    properties:
+        name: string
+  Version:
+     type: object
+     properties:
+       name: string
+  Classifier:
+     type: object
+     properties:
+       name: string
+  File:
+      type: object
+      properties:
+        name: string
+  Error:
+   type: object
+   properties:
+      token: string
+      code:
+        enum: [
+        ILLEGAL_RANGE_SPEC,
+        UNEXPECTED_ERROR,
+        RESOURCE_NOT_FOUND,
+        ILLEGAL_RESOURCE_CREATION,
+        ILLEGAL_RESOURCE_CHANGE,
+        INVALID_ACCOUNT,
+        INCOMPLETE_REQUEST]
+      description: string
