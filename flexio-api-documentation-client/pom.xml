@@ -22,18 +22,11 @@
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>${project.parent.artifactId}-api</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>org.codingmatters.rest</groupId>
             <artifactId>cdm-rest-client-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.flexio.services</groupId>
-            <artifactId>flexio-services-support</artifactId>
-        </dependency>
     </dependencies>
-
 
     <build>
         <plugins>

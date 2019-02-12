@@ -18,11 +18,6 @@
             <artifactId>${project.artifactId}-spec</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>io.flexio.services</groupId>
-            <artifactId>flexio-services-api-support</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.codingmatters.rest</groupId>
             <artifactId>cdm-rest-api</artifactId>
@@ -31,7 +26,6 @@
             <groupId>org.codingmatters.value.objects</groupId>
             <artifactId>cdm-value-objects-values</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
