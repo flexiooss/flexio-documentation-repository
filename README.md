@@ -1,6 +1,6 @@
 # flexio-documentation-repository
 
-Stockage de documentation
+Stockage de documentations
 
 ##Info
 - Si getGroups retourne DirectoryException gros probleme, n'est pas censé arriver -> 500

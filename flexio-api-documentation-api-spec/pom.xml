@@ -6,6 +6,7 @@
         <groupId>io.flexio.services.api.documentation</groupId>
         <artifactId>flexio-api-documentation</artifactId>
         <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../</relativePath>
     </parent>
 
     <groupId>io.flexio.services.api.documentation</groupId>
