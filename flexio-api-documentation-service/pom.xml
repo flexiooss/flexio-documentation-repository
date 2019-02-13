@@ -14,8 +14,8 @@
     <name>${project.groupId}:${project.artifactId}</name>
 
     <properties>
-        <docker.image.namespace>${flexio.docker.namespace}</docker.image.namespace>
-        <service.class.name>io.flexio.services.config.FlexioConfigServices</service.class.name>
+        <docker.image.namespace>${codingmatters.docker.namespace}</docker.image.namespace>
+        <service.class.name>io.flexio.services.api.documentation.FlexioApiDocumentationServices</service.class.name>
     </properties>
 
     <dependencies>

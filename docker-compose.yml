@@ -1,0 +1,25 @@
+version: "3"
+services:
+  web:
+    image: nginx
+    ports:
+      - "8080:80"
+    environment:
+      NGINX_PORT: 80
+    volumes:
+      - "doc_storage_data:/var/data"
+
+  doc:
+    image: localhost:5000/codingmatters/flexio-api-documentation-service:1.0.0-SNAPSHOT
+    ports:
+      - "8081:80"
+      - "5005:5005"
+    environment:
+      STORAGE_DIR: /var/data
+      LOG_LEVEL: TRACE
+      JVM_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
+    volumes:
+      - "doc_storage_data:/var/data"
+
+volumes:
+  doc_storage_data:

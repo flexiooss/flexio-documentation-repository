@@ -1,6 +1,7 @@
 package io.flexio.services.api.documentation;
 
 import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.api.FlexioApiDocumentationDescriptor;
 import io.flexio.services.api.documentation.handlers.*;
 import org.codingmatters.poom.services.support.Env;
 import org.codingmatters.rest.api.Processor;
@@ -10,13 +11,6 @@ import io.flexio.services.api.documentation.service.FlexioApiDocumentationProces
 
 public class FlexioApiDocumentationApi {
 
-    private final String name = "flexio-api-documentation";
-
-    public FlexioApiDocumentationApi(String apiPath) {
-        this.apiPath = apiPath;
-    }
-
-    private String apiPath;
     private FlexioApiDocumentationHandlers handlers;
     private FlexioApiDocumentationProcessor processor;
 
@@ -47,6 +41,6 @@ public class FlexioApiDocumentationApi {
     }
 
     public String path() {
-        return apiPath;
+        return "/" + FlexioApiDocumentationDescriptor.NAME;
     }
 }

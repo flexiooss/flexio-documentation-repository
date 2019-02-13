@@ -10,6 +10,7 @@ import io.flexio.services.api.documentation.api.classifiersgetresponse.Status404
 import io.flexio.services.api.documentation.api.classifiersgetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Classifier;
 import io.flexio.services.api.documentation.api.types.Error;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.function.Function;
 
 public class GetClassifiers implements Function<ClassifiersGetRequest, ClassifiersGetResponse> {
     private RessourcesManager fs;
+    private static CategorizedLogger log = CategorizedLogger.getLogger(GetClassifiers.class);
+
 
     public GetClassifiers(RessourcesManager fs) {
         this.fs = fs;
@@ -29,7 +32,9 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
         classifiersGetRequest.opt().version().orElse("").isEmpty()){
             return ClassifiersGetResponse.builder().status400(
                     Status400.builder().payload(
-                            Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Lack of parameter.s", classifiersGetRequest))
+                                    .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
         }
@@ -50,12 +55,18 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
         }catch (DirectoryNotExistsException e){
             return ClassifiersGetResponse.builder().status404(
                     Status404.builder().payload(
-                            Error.builder().code(Error.Code.RESOURCE_NOT_FOUND).build()
+                            Error.builder()
+                                    .token(log.tokenized().info(""))
+                                    .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
         }catch (Exception e){
             return ClassifiersGetResponse.builder().status500(
-                    Status500.builder().build()
+                    Status500.builder().payload(
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .code(Error.Code.UNEXPECTED_ERROR).build()
+                    ).build()
             ).build();
         }
     }

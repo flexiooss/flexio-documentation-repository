@@ -11,6 +11,14 @@ import java.io.File;
 
 public class FlexioApiDocumentationServices {
 
+    public static void main(String[] args){
+        String host = Env.mandatory(Env.SERVICE_HOST).asString();
+        int port = Env.mandatory(Env.SERVICE_PORT).asInteger();
+        // TODO start service
+        FlexioApiDocumentationServices service = new FlexioApiDocumentationServices(port, host, api());
+        service.start();
+    }
+
     private Undertow server;
     private final int port;
     private final String host;
@@ -22,20 +30,7 @@ public class FlexioApiDocumentationServices {
         this.api = api;
     }
 
-    public static void main(String[] args){
-        String host = Env.mandatory(Env.SERVICE_HOST).asString();
-        int port = Env.mandatory(Env.SERVICE_PORT).asInteger();
-       // TODO start service
-        FlexioApiDocumentationServices service = new FlexioApiDocumentationServices(port, host, api());
-        service.start();
-    }
-
     static public FlexioApiDocumentationApi api(){
-        JsonFactory jsonFactory = new JsonFactory();
-
-        File logStorage = new File(Env.mandatory("LOG_STORAGE").asString());
-        String jobRegistryUrl = Env.mandatory("JOB_REGISTRY_URL").asString();
-
         return new FlexioApiDocumentationApi();
     }
 

@@ -10,12 +10,15 @@ import io.flexio.services.api.documentation.api.filepostresponse.Status400;
 import io.flexio.services.api.documentation.api.filepostresponse.Status404;
 import io.flexio.services.api.documentation.api.filepostresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Error;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.io.InputStream;
 import java.util.function.Function;
 
 public class CreateClassifer implements Function<FilePostRequest, FilePostResponse> {
     private RessourcesManager fs;
+    private static CategorizedLogger log = CategorizedLogger.getLogger(CreateClassifer.class);
+
 
     public CreateClassifer(RessourcesManager fs) {
         this.fs = fs;
@@ -31,7 +34,9 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
 
             return FilePostResponse.builder().status400(
                     Status400.builder().payload(
-                            Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Lack of a parameter.s", filesPostRequest))
+                                    .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
         }
@@ -51,13 +56,19 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
         }catch (DirectoryNotExistsException e){
             return FilePostResponse.builder().status404(
                     Status404.builder().payload(
-                            Error.builder().code(Error.Code.RESOURCE_NOT_FOUND).build()
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Directory not exists", e))
+                                    .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
         }catch (Exception e){
             e.printStackTrace();
             return FilePostResponse.builder()
-                    .status500(Status500.builder().build()).build();
+                    .status500(Status500.builder().payload(
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .code(Error.Code.UNEXPECTED_ERROR).build()
+                    ).build()).build();
         }
     }
 }

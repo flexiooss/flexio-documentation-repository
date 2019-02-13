@@ -10,6 +10,7 @@ import io.flexio.services.api.documentation.api.groupsgetresponse.Status404;
 import io.flexio.services.api.documentation.api.groupsgetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Error;
 import io.flexio.services.api.documentation.api.types.Group;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.function.Function;
 
 public class GetGroups implements Function<GroupsGetRequest, GroupsGetResponse> {
     private RessourcesManager fs;
+    private static CategorizedLogger log = CategorizedLogger.getLogger(GetGroups.class);
+
 
     public GetGroups(RessourcesManager fs){
         this.fs = fs;
@@ -39,12 +42,19 @@ public class GetGroups implements Function<GroupsGetRequest, GroupsGetResponse> 
         }catch (DirectoryNotExistsException e){
             return GroupsGetResponse.builder().status500(
                     Status500.builder().payload(
-                            Error.builder().code(Error.Code.RESOURCE_NOT_FOUND).build()
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Dir not exists, Deleted ?", e))
+                                    .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
         }catch (Exception e){
             return  GroupsGetResponse.builder().status500(
-                    Status500.builder().build()
+                    Status500.builder().payload(
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .code(Error.Code.UNEXPECTED_ERROR)
+                                    .build()
+                    ).build()
             ).build();
         }
     }

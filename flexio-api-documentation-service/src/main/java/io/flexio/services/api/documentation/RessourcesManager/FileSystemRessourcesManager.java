@@ -17,6 +17,12 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
         log.info("Storage dir : "+ this.STORAGE_DIR);
         File f = new File(STORAGE_DIR);
+        if (!f.exists()){
+            boolean created = f.mkdirs();
+            //Todo throw exception ???
+        }else{
+            f.isDirectory();
+        }
     }
 
 
@@ -63,7 +69,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         List<String> list = new ArrayList<String>();
         for (File f : base.listFiles()) {
             list.add(f.getName());
-            log.trace(f.getName());
+            log.trace("File finded : "+f.getName());
         }
         return list;
     }

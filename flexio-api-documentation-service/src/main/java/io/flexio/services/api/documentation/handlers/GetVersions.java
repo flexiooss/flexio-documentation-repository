@@ -10,6 +10,7 @@ import io.flexio.services.api.documentation.api.versionsgetresponse.Status200;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status400;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status404;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status500;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.function.Function;
 
 public class GetVersions implements Function<VersionsGetRequest, VersionsGetResponse> {
     private RessourcesManager fs;
+    private static CategorizedLogger log = CategorizedLogger.getLogger(GetVersions.class);
+
 
     public GetVersions(RessourcesManager fs) {
         this.fs = fs;
@@ -46,12 +49,18 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
         }catch (DirectoryNotExistsException e){
             return VersionsGetResponse.builder().status404(
                     Status404.builder().payload(
-                            Error.builder().code(Error.Code.RESOURCE_NOT_FOUND).build()
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Dir not exists, Deleted ?", e))
+                                    .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
         }catch (Exception e){
             return VersionsGetResponse.builder().status500(
-                    Status500.builder().build()
+                    Status500.builder().payload(
+                            Error.builder()
+                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .code(Error.Code.UNEXPECTED_ERROR).build()
+                    ).build()
             ).build();
         }
 
