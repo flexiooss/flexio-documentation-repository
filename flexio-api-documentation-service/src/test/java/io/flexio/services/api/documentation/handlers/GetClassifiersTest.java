@@ -114,22 +114,4 @@ public class GetClassifiersTest {
 
     }
 
-    @Test
-    public void okIntenalError(){
-        RessourcesManager fs = new TestRessourcesManager(){
-            @Override
-            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
-            }
-        };
-
-        ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
-                .group("g")
-                .module("m")
-                .version("v1")
-                .build();
-
-        ClassifiersGetResponse response = new GetClassifiers(fs).apply(cgr);
-        assertTrue(response.opt().status500().isPresent());
-    }
 }

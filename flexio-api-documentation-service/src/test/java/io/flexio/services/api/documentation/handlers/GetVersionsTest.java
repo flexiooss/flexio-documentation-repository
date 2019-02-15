@@ -79,24 +79,6 @@ public class GetVersionsTest {
     }
 
     @Test
-    public void okInternalError(){
-        RessourcesManager fs = new TestRessourcesManager(){
-            @Override
-            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
-            }
-        };
-
-        VersionsGetRequest vgr = VersionsGetRequest.builder()
-                .group("g")
-                .module("m")
-                .build();
-
-        VersionsGetResponse response = new GetVersions(fs).apply(vgr);
-        assertTrue(response.opt().status500().isPresent());
-    }
-
-    @Test
     public void okNoDirError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override

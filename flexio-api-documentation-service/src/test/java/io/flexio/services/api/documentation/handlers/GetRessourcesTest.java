@@ -105,25 +105,4 @@ public class GetRessourcesTest {
         assertTrue(response.opt().status404().isPresent());
         assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
     }
-
-    @Test
-    public void okInternalError(){
-        RessourcesManager fs = new TestRessourcesManager(){
-            @Override
-            public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
-            }
-        };
-
-        ClassLoader classLoader = getClass().getClassLoader();
-        FileGetRequest fgr = FileGetRequest.builder()
-                .group("g")
-                .module("m")
-                .version("v")
-                .classifier("c")
-                .build();
-
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
-        assertTrue(response.opt().status500().isPresent());
-    }
 }

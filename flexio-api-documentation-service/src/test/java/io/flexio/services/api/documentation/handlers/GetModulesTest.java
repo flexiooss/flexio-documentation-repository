@@ -29,7 +29,7 @@ public class GetModulesTest {
     public void ok(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getGroups() throws RessourceNotFoundException {
+            public List<String> getModules(String group) throws RessourceNotFoundException {
                 return new ArrayList<String>();
             }
         };

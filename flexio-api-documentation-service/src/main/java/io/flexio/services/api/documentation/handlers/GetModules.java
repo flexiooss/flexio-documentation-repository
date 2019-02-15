@@ -44,7 +44,6 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
                 listModules.add(Module.builder().name(module).build());
             }
 
-
             return ModulesGetResponse.builder().status200(
                     Status200.builder().payload(listModules).build()
             ).build();
