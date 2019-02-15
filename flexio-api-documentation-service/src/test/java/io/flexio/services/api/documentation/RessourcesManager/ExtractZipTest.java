@@ -5,20 +5,20 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-
 import java.io.InputStream;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class ExtractZipTest {
     @Rule
     public TemporaryFolder tmpFolder = new TemporaryFolder();
 
     @Rule
-    public ExpectedException thrown= ExpectedException.none();
+    public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void extract1File() throws Exception{
+    public void extract1File() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
 
@@ -28,7 +28,7 @@ public class ExtractZipTest {
     }
 
     @Test
-    public void extractMultipleFile() throws Exception{
+    public void extractMultipleFile() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
 
