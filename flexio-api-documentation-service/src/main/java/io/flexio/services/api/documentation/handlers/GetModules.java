@@ -51,7 +51,7 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
             return ModulesGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Dir not exists, Deleted ?", e))
+                                    .token(log.tokenized().info("Dir not exists, Deleted ?", e))
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();

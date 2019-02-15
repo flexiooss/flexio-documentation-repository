@@ -33,7 +33,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Lack of parameter.s", classifiersGetRequest))
+                                    .token(log.tokenized().info("Lack of parameter.s", classifiersGetRequest))
                                     .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
@@ -56,7 +56,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
-                                    .token(log.tokenized().info(""))
+                                    .token(log.tokenized().info("Ressource not found"))
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();

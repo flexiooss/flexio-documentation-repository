@@ -10,12 +10,12 @@ public class FlexioApiDocumentationServices {
     private static CategorizedLogger log = CategorizedLogger.getLogger(FlexioApiDocumentationServices.class);
 
     public static void main(String[] args){
-    log.trace("coucou");
         String host = Env.mandatory(Env.SERVICE_HOST).asString();
         int port = Env.mandatory(Env.SERVICE_PORT).asInteger();
         // TODO start service
         FlexioApiDocumentationServices service = new FlexioApiDocumentationServices(port, host, api());
         service.start();
+        log.info("Service started");
     }
 
     private Undertow server;

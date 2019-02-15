@@ -33,7 +33,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
             return FilePostResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Lack of a parameter.s", filesPostRequest))
+                                    .token(log.tokenized().info("Lack of a parameter.s", filesPostRequest))
                                     .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
@@ -63,7 +63,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
             return FilePostResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Directory not exists", e))
+                                    .token(log.tokenized().info("Directory not exists", e))
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
@@ -72,7 +72,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
             return FilePostResponse.builder()
                     .status500(Status500.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .token(log.tokenized().info("Unknown error", e))
                                     .code(Error.Code.UNEXPECTED_ERROR).build()
                     ).build()).build();
         }

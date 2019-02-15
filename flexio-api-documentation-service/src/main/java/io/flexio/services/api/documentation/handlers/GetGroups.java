@@ -41,7 +41,7 @@ public class GetGroups implements Function<GroupsGetRequest, GroupsGetResponse> 
             return GroupsGetResponse.builder().status500(
                     Status500.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Dir not exists, Deleted ?", e))
+                                    .token(log.tokenized().info("Dir not exists, Deleted ?", e))
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();

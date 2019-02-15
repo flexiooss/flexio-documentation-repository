@@ -57,7 +57,7 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
             return FileGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Dir not exists, Deleted ?", e))
+                                    .token(log.tokenized().info("Dir not exists, Deleted ?", e))
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
@@ -65,7 +65,7 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
             return FileGetResponse.builder().status500(
                     Status500.builder().payload(
                             Error.builder()
-                                    .token(log.audit().tokenized().info("Unknown error", e))
+                                    .token(log.tokenized().info("Unknown error", e))
                                     .code(Error.Code.UNEXPECTED_ERROR).build()
                     ).build()
             ).build();
