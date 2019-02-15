@@ -55,14 +55,6 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
-        }catch (Exception e){
-            return ModulesGetResponse.builder().status500(
-                    Status500.builder().payload(
-                            Error.builder()
-                                    .token(log.audit().tokenized().info("Unknown error", e))
-                                    .code(Error.Code.UNEXPECTED_ERROR).build()
-                    ).build()
-            ).build();
         }
     }
 }

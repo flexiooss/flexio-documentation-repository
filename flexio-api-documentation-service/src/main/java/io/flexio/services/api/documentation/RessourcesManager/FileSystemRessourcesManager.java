@@ -176,12 +176,4 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         File f = new File(finalPath);
         return f.exists();
     }
-
-    private InputStream copyInputStream(InputStream input) throws IOException{
-
-
-
-        return null;
-    }
-
 }

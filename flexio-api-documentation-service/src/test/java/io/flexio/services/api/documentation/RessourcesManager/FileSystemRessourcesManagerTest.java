@@ -212,6 +212,4 @@ public class FileSystemRessourcesManagerTest {
 
         assertThat(fs.getRessources(group, module, version, classifier).size(), is(2));
     }
-
-
 }

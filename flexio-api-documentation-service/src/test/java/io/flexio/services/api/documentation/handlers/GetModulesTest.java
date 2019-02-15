@@ -69,4 +69,5 @@ public class GetModulesTest {
         assertTrue(response.opt().status404().isPresent());
         assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
     }
+
 }

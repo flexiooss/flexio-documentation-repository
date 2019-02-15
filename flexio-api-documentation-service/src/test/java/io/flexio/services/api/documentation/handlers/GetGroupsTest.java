@@ -60,19 +60,4 @@ public class GetGroupsTest {
 
         assertTrue(response.opt().status500().isPresent());
     }
-
-    @Test
-    public void internalError(){
-        RessourcesManager fs = new TestRessourcesManager(){
-            @Override
-            public List<String> getGroups() throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
-            }
-        };
-
-        GroupsGetRequest ggr = GroupsGetRequest.builder().build();
-        GroupsGetResponse response = new GetGroups(fs).apply(ggr);
-
-        assertTrue(response.opt().status500().isPresent());
-    }
 }

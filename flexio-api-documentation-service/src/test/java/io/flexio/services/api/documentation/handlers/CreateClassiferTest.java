@@ -86,9 +86,14 @@ public class CreateClassiferTest {
     @Test
     public void ok(){
         RessourcesManager fs = new TestRessourcesManager(){
+            private int cpt = 0;
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
-                return new ExtractZipResut(true, path);
+                if (cpt == 0) {
+                    cpt++;
+                    return new ExtractZipResut(true, path);
+                }
+                return new ExtractZipResut(false, path);
             }
         };
 
@@ -106,6 +111,21 @@ public class CreateClassiferTest {
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
         assertTrue(response.opt().status201().isPresent());
+
+
+        //Send twice the same zip
+        is = classLoader.getResourceAsStream("html.zip");
+        fpr =  FilePostRequest.builder()
+                .payload(
+                        File.builder().content(Content.from(is)).build()
+                )
+                .group("g")
+                .module("m")
+                .classifier("c")
+                .version("v1")
+                .build();
+        response = new CreateClassifer(fs).apply(fpr);
+        assertTrue(response.opt().status200().isPresent());
     }
 
     @Test

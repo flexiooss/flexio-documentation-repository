@@ -5,8 +5,11 @@ import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
 import io.flexio.services.api.documentation.api.*;
 import io.flexio.services.api.documentation.api.types.Error;
+import io.flexio.services.api.documentation.api.types.Manifest;
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,5 +107,31 @@ public class GetRessourcesTest {
         FileGetResponse response = new GetRessources(fs).apply(fgr);
         assertTrue(response.opt().status404().isPresent());
         assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
+    }
+
+    @Test
+    public void okIOException(){
+        RessourcesManager fs = new TestRessourcesManager(){
+            @Override
+            public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
+                return null;
+            }
+
+            @Override
+            public Manifest getManifest(String path) throws FileNotFoundException, IOException {
+                throw new IOException();
+            }
+        };
+
+        ClassLoader classLoader = getClass().getClassLoader();
+        FileGetRequest fgr = FileGetRequest.builder()
+                .group("g")
+                .module("m")
+                .version("v")
+                .classifier("c")
+                .build();
+
+        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        assertTrue(response.opt().status500().isPresent());
     }
 }
