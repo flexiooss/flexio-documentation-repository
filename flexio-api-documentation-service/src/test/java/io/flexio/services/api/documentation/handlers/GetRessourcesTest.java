@@ -3,7 +3,8 @@ package io.flexio.services.api.documentation.handlers;
 import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
-import io.flexio.services.api.documentation.api.*;
+import io.flexio.services.api.documentation.api.FileGetRequest;
+import io.flexio.services.api.documentation.api.FileGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
 import io.flexio.services.api.documentation.api.types.Manifest;
 import org.junit.Test;
@@ -13,13 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class GetRessourcesTest {
 
     @Test
-    public void noParameterRequest(){
+    public void noParameterRequest() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder().build();
@@ -29,7 +31,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackModule(){
+    public void lackModule() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -41,7 +43,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackVersion(){
+    public void lackVersion() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -54,7 +56,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackClassifier(){
+    public void lackClassifier() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -88,8 +90,8 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void okNoDirError(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okNoDirError() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
                 throw new RessourceNotFoundException();
@@ -110,8 +112,8 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void okIOException(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okIOException() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
                 return null;

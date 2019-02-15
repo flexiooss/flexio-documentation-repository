@@ -8,16 +8,16 @@ import io.flexio.services.api.documentation.api.ModulesGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class GetModulesTest {
     @Test
-    public void noParameterRequest(){
+    public void noParameterRequest() {
         RessourcesManager fs = new TestRessourcesManager();
         ModulesGetRequest mgr = ModulesGetRequest.builder().build();
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
@@ -26,8 +26,8 @@ public class GetModulesTest {
     }
 
     @Test
-    public void ok(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void ok() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {
                 return new ArrayList<String>();
@@ -40,8 +40,8 @@ public class GetModulesTest {
     }
 
     @Test
-    public void okWithFiles(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okWithFiles() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {
                 List<String> list = new ArrayList<String>();
@@ -56,8 +56,8 @@ public class GetModulesTest {
     }
 
     @Test
-    public void okDirectoryException(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okDirectoryException() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {
                 throw new RessourceNotFoundException();

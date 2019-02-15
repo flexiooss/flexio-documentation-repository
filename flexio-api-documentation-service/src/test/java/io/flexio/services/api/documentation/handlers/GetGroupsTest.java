@@ -1,6 +1,5 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceManagerException;
 import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
@@ -11,12 +10,12 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class GetGroupsTest {
     @Test
-    public void okEmpty(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okEmpty() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getGroups() throws RessourceNotFoundException {
                 return new ArrayList<String>();
@@ -30,8 +29,8 @@ public class GetGroupsTest {
     }
 
     @Test
-    public void okFiles(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okFiles() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getGroups() throws RessourceNotFoundException {
                 List<String> list = new ArrayList<String>();
@@ -47,8 +46,8 @@ public class GetGroupsTest {
     }
 
     @Test
-    public void noDir(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void noDir() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getGroups() throws RessourceNotFoundException {
                 throw new RessourceNotFoundException();

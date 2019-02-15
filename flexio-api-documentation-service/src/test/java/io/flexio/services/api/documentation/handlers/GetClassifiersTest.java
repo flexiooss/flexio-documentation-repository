@@ -11,13 +11,14 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 
 public class GetClassifiersTest {
     @Test
-    public void noParameterRequest(){
+    public void noParameterRequest() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder().build();
@@ -27,7 +28,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void lackModule(){
+    public void lackModule() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
@@ -39,7 +40,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void lackVersion(){
+    public void lackVersion() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
@@ -52,8 +53,8 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void okNoFile(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okNoFile() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
                 return new ArrayList<String>();
@@ -71,11 +72,11 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void ok(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void ok() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
-                List<String>  list = new ArrayList<String>();
+                List<String> list = new ArrayList<String>();
                 list.add("plok");
                 list.add("plokij");
                 return list;
@@ -94,8 +95,8 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void okNoDirError(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void okNoDirError() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
                 throw new RessourceNotFoundException();

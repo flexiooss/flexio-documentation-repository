@@ -7,23 +7,24 @@ import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
 import io.flexio.services.api.documentation.api.FilePostResponse;
-import org.codingmatters.rest.api.types.File;
 import io.flexio.services.api.documentation.api.types.Error;
+import org.codingmatters.rest.api.types.File;
 import org.codingmatters.rest.io.Content;
 import org.junit.Test;
 
 import java.io.InputStream;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class CreateClassiferTest {
 
     @Test
-    public void noParameterRequest(){
+    public void noParameterRequest() {
         RessourcesManager fs = new TestRessourcesManager();
 
-        FilePostRequest fpr =  FilePostRequest.builder().build();
+        FilePostRequest fpr = FilePostRequest.builder().build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
         assertTrue(response.opt().status400().isPresent());
@@ -33,7 +34,7 @@ public class CreateClassiferTest {
     public void requestLackModule() {
         RessourcesManager fs = new TestRessourcesManager();
 
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
                 .build();
 
@@ -45,7 +46,7 @@ public class CreateClassiferTest {
     public void requestLackVersion() {
         RessourcesManager fs = new TestRessourcesManager();
 
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
                 .module("m")
                 .classifier("c")
@@ -59,7 +60,7 @@ public class CreateClassiferTest {
     public void requestLackClassifier() {
         RessourcesManager fs = new TestRessourcesManager();
 
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
                 .module("m")
                 .build();
@@ -69,10 +70,10 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void requestLackFile(){
+    public void requestLackFile() {
         RessourcesManager fs = new TestRessourcesManager();
 
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
                 .module("m")
                 .version("v1")
@@ -84,9 +85,10 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void ok(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void ok() {
+        RessourcesManager fs = new TestRessourcesManager() {
             private int cpt = 0;
+
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
                 if (cpt == 0) {
@@ -99,7 +101,7 @@ public class CreateClassiferTest {
 
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .payload(
                         File.builder().content(Content.from(is)).build()
                 )
@@ -115,7 +117,7 @@ public class CreateClassiferTest {
 
         //Send twice the same zip
         is = classLoader.getResourceAsStream("html.zip");
-        fpr =  FilePostRequest.builder()
+        fpr = FilePostRequest.builder()
                 .payload(
                         File.builder().content(Content.from(is)).build()
                 )
@@ -129,8 +131,8 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void parametersOkInternalError(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void parametersOkInternalError() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
                 throw new RessourceManagerException();
@@ -139,7 +141,7 @@ public class CreateClassiferTest {
 
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .payload(
                         File.builder().content(Content.from(is)).build()
                 )
@@ -154,8 +156,8 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void parametersOkNoDir(){
-        RessourcesManager fs = new TestRessourcesManager(){
+    public void parametersOkNoDir() {
+        RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
                 throw new RessourceNotFoundException();
@@ -164,7 +166,7 @@ public class CreateClassiferTest {
 
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
-        FilePostRequest fpr =  FilePostRequest.builder()
+        FilePostRequest fpr = FilePostRequest.builder()
                 .payload(
                         File.builder().content(Content.from(is)).build()
                 )
