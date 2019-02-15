@@ -17,13 +17,13 @@ Stockage de documentations
 ##Exemples
 
 Envoie d'un zip:
-- ```curl 127.0.0.1:8081/flexio-api-documentation/groupe/module/version/classifier --data-binary @"PATH.zip" | json_pp```
+- ```curl -v 127.0.0.1:8081/flexio-api-documentation/groupe/module/version/classifier --data-binary @"PATH.zip" | json_pp```
 
 Liste des groupes:
-- ```curl 127.0.0.1:8081/flexio-api-documentation/ | json_pp```
+- ```curl -v 127.0.0.1:8081/flexio-api-documentation/ | json_pp```
 
 Listes des modules dans le groupe "groupe":
-- ```curl 127.0.0.1:8081/flexio-api-documentation/groupe | json_pp```
+- ```curl -v 127.0.0.1:8081/flexio-api-documentation/groupe | json_pp```
 
 Manifest final :
-- ```curl 127.0.0.1:8081/flexio-api-documentation/module/version/classifier | json_pp```
+- ```curl -v 127.0.0.1:8081/flexio-api-documentation/groupe/module/version/classifier | json_pp```

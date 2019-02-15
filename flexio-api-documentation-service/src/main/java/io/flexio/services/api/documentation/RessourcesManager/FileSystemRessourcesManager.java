@@ -32,19 +32,19 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         log.info("Root dir : "+ this.ROOT_DIR);
         File f = new File(ROOT_DIR);
         if (!f.exists()) {
-            boolean created = f.mkdirs();
+            f.mkdirs();
         }
 
         this.STORAGE_DIR = RessourcesManager.buildPath(ROOT_DIR, "storage");
         f = new File(STORAGE_DIR);
         if (!f.exists()) {
-            boolean created = f.mkdirs();
+            f.mkdirs();
         }
 
         this.MANIFEST_DIR = RessourcesManager.buildPath(ROOT_DIR, "manifests");
         f = new File(MANIFEST_DIR);
         if (!f.exists()) {
-            boolean created = f.mkdirs();
+            f.mkdirs();
         }
     }
 

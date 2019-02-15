@@ -1,12 +1,16 @@
 package io.flexio.services.api.documentation;
 
+import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
 import io.undertow.Undertow;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
 import org.codingmatters.poom.services.support.Env;
 import org.codingmatters.rest.undertow.CdmHttpUndertowHandler;
 
 public class FlexioApiDocumentationServices {
+    private static CategorizedLogger log = CategorizedLogger.getLogger(FlexioApiDocumentationServices.class);
 
     public static void main(String[] args){
+    log.trace("coucou");
         String host = Env.mandatory(Env.SERVICE_HOST).asString();
         int port = Env.mandatory(Env.SERVICE_PORT).asInteger();
         // TODO start service
