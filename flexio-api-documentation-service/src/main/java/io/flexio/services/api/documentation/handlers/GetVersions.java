@@ -28,7 +28,7 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
     @Override
     public VersionsGetResponse apply(VersionsGetRequest versionsGetRequest) {
         if (versionsGetRequest.opt().group().orElse("").isEmpty() ||
-        versionsGetRequest.opt().module().orElse("").isEmpty()){
+                versionsGetRequest.opt().module().orElse("").isEmpty()) {
             return VersionsGetResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
@@ -46,7 +46,7 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
             return VersionsGetResponse.builder().status200(
                     Status200.builder().payload(listVersions).build()
             ).build();
-        }catch (RessourceNotFoundException e){
+        } catch (RessourceNotFoundException e) {
             return VersionsGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

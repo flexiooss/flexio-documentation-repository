@@ -28,7 +28,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
                 filesPostRequest.opt().module().orElse("").isEmpty() ||
                 filesPostRequest.opt().version().orElse("").isEmpty() ||
                 filesPostRequest.opt().classifier().orElse("").isEmpty() ||
-                !filesPostRequest.opt().payload().isPresent()){
+                !filesPostRequest.opt().payload().isPresent()) {
 
             return FilePostResponse.builder().status400(
                     Status400.builder().payload(
@@ -38,7 +38,6 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
                     ).build()
             ).build();
         }
-
 
 
         String path = RessourcesManager.buildPath(filesPostRequest.group(),
@@ -51,15 +50,15 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
             Manifest m = this.fs.getManifest(path);
 
 
-            if (result.isExtracted()){
+            if (result.isExtracted()) {
                 return FilePostResponse.builder()
                         .status201(Status201.builder().payload(m).build()).build();
-            }else{
-                return  FilePostResponse.builder().status200(
+            } else {
+                return FilePostResponse.builder().status200(
                         Status200.builder().payload(m).build()
                 ).build();
             }
-        }catch (RessourceNotFoundException e){
+        } catch (RessourceNotFoundException e) {
             return FilePostResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
@@ -67,7 +66,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
                                     .code(Error.Code.RESOURCE_NOT_FOUND).build()
                     ).build()
             ).build();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return FilePostResponse.builder()
                     .status500(Status500.builder().payload(

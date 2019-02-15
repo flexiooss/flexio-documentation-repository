@@ -28,8 +28,8 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
     @Override
     public ClassifiersGetResponse apply(ClassifiersGetRequest classifiersGetRequest) {
         if (classifiersGetRequest.opt().group().orElse("").isEmpty() ||
-        classifiersGetRequest.opt().module().orElse("").isEmpty() ||
-        classifiersGetRequest.opt().version().orElse("").isEmpty()){
+                classifiersGetRequest.opt().module().orElse("").isEmpty() ||
+                classifiersGetRequest.opt().version().orElse("").isEmpty()) {
             return ClassifiersGetResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder()
@@ -52,7 +52,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status200(
                     Status200.builder().payload(listClassifier).build())
                     .build();
-        }catch (RessourceNotFoundException e){
+        } catch (RessourceNotFoundException e) {
             return ClassifiersGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
