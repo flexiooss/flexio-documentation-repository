@@ -1,6 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
 import io.flexio.services.api.documentation.api.VersionsGetRequest;
@@ -42,7 +42,7 @@ public class GetVersionsTest {
     public void okNoFile(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getVersions(String group, String module) throws Exception {
+            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -60,7 +60,7 @@ public class GetVersionsTest {
     public void ok(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getVersions(String group, String module) throws Exception {
+            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
                 List<String> list = new ArrayList<String>();
                 list.add("plok");
                 list.add("plokij");
@@ -82,8 +82,8 @@ public class GetVersionsTest {
     public void okInternalError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getVersions(String group, String module) throws Exception {
-                throw new Exception();
+            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
+                throw new RessourceNotFoundException();
             }
         };
 
@@ -100,8 +100,8 @@ public class GetVersionsTest {
     public void okNoDirError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getVersions(String group, String module) throws Exception {
-                throw new DirectoryNotExistsException();
+            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
+                throw new RessourceNotFoundException();
             }
         };
 

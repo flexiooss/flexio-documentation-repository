@@ -1,7 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.FileGetRequest;
 import io.flexio.services.api.documentation.api.FileGetResponse;
@@ -10,10 +9,9 @@ import io.flexio.services.api.documentation.api.filegetresponse.Status400;
 import io.flexio.services.api.documentation.api.filegetresponse.Status404;
 import io.flexio.services.api.documentation.api.filegetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Error;
-import io.flexio.services.api.documentation.api.types.File;
+import io.flexio.services.api.documentation.api.types.Manifest;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -45,15 +43,17 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
                     filesGetRequest.version(),
                     filesGetRequest.classifier());
 
-            List<File> listFiles = new ArrayList<File>();
-            for (String file : files) {
-                listFiles.add(File.builder().name(file).build());
-            }
+            String path = RessourcesManager.buildPath(filesGetRequest.group(),
+                    filesGetRequest.module(),
+                    filesGetRequest.version(),
+                    filesGetRequest.classifier());
+
+                Manifest m = this.fs.getManifest(path);
 
             return FileGetResponse.builder().status200(
-                    Status200.builder().payload(listFiles).build()
+                    Status200.builder().payload(m).build()
             ).build();
-        }catch (DirectoryNotExistsException e){
+        }catch (RessourceNotFoundException e){
             return FileGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

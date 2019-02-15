@@ -5,6 +5,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 
 public class ExtractZipTest {
@@ -18,24 +21,21 @@ public class ExtractZipTest {
     public void extract1File() throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
-        System.out.println(tmpFolder.toString());
-        System.out.println(tmpFolder.getRoot().getName());
-        System.out.println(tmpFolder.getRoot().getAbsolutePath());
 
         ExtractZip ez = new ExtractZip(is, tmpFolder.getRoot().getAbsolutePath());
-        ez.extract();
+        String location = ez.extract();
+        assertThat(location, is(tmpFolder.getRoot().getAbsolutePath()));
     }
 
     @Test
     public void extractMultipleFile() throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
-        System.out.println(tmpFolder.toString());
-        System.out.println(tmpFolder.getRoot().getName());
-        System.out.println(tmpFolder.getRoot().getAbsolutePath());
+
 
         ExtractZip ez = new ExtractZip(is, tmpFolder.getRoot().getAbsolutePath());
-        ez.extract();
+        String location = ez.extract();
+        assertThat(location, is(tmpFolder.getRoot().getAbsolutePath()));
     }
 
 }

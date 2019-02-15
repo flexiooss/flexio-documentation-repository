@@ -1,7 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.ModulesGetRequest;
 import io.flexio.services.api.documentation.api.ModulesGetResponse;
@@ -49,7 +48,7 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
             return ModulesGetResponse.builder().status200(
                     Status200.builder().payload(listModules).build()
             ).build();
-        }catch (DirectoryNotExistsException e){
+        }catch (RessourceNotFoundException e){
             return ModulesGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

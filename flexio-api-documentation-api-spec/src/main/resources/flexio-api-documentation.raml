@@ -70,7 +70,7 @@ mediaType: application/json
        description: Recupere le fichier
        responses:
         200:
-          body: File[]
+          body: Manifest
         400:
           body: Error
         404:
@@ -82,8 +82,9 @@ mediaType: application/json
        body: file
        responses:
         201:
-          headers:
-           Location: string
+          body: Manifest
+        200:
+          body: Manifest
         400:
           body: Error
         404:
@@ -113,6 +114,12 @@ types:
       type: object
       properties:
         name: string
+  Manifest:
+    type: object
+    properties:
+      md5: string
+      uploadedAt: string
+      files: File[]
   Error:
    type: object
    properties:

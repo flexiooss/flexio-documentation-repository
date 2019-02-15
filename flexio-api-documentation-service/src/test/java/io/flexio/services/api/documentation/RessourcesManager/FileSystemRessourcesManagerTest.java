@@ -3,7 +3,7 @@ package io.flexio.services.api.documentation.RessourcesManager;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,20 +27,38 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void addZipFile() throws Exception{
+    public void md5() throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is = classLoader.getResourceAsStream("html.zip");
         assertNotNull(is);
 
+        assertThat(fs.getmd5(is), is("422b5313ac3bc760d37fd1ca4b1756ca"));
+        is = classLoader.getResourceAsStream("html2Files.zip");
+
+        assertThat(fs.getmd5(is), is("d22625c9c73f7c37764c22de83c5009f"));
+
+    }
+
+    @Test
+    public void addZipFile() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("html.zip");
+        assertNotNull(is);
         String pathBase = RessourcesManager.buildPath("g1", "m1", "v1", "c");
 
-        String path = fs.addZipFileIn(is, pathBase);
+        ExtractZipResut result = fs.addZipFileIn(is, pathBase);
+        assertThat(result.isExtracted(), is(true));
         assertThat(fs.getStorageDir(), is(tmpFolder.getRoot().getAbsolutePath()));
-        assertThat(path, is(tmpFolder.getRoot().getAbsolutePath() + pathBase));
+        assertThat(result.getPath(), is(pathBase));
         
         int nbRessources = fs.getRessources("g1", "m1", "v1", "c").size();
         assertThat(nbRessources, is(1));
+
+        is = classLoader.getResourceAsStream("html.zip");
+        pathBase = RessourcesManager.buildPath("g1", "m1", "v1", "c");
+        result = fs.addZipFileIn(is, pathBase);
+        assertThat(result.isExtracted(), is(false));
     }
 
     @Test
@@ -66,7 +84,7 @@ public class FileSystemRessourcesManagerTest {
     public void testGetModulesExceptions() throws Exception {
         String group = "group1";
 
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         assertThat(fs.getModules(group).size(), is(0));
     }
 
@@ -93,7 +111,7 @@ public class FileSystemRessourcesManagerTest {
         String group = "group1";
         String module = "module1";
 
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         assertThat(fs.getVersions(group, module).size(), is(0));
     }
 
@@ -120,7 +138,7 @@ public class FileSystemRessourcesManagerTest {
         String group = "group1";
         String module = "module1";
         String version = "v1";
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         assertThat(fs.getClassifiers(group, module, version).size(), is(0));
     }
 
@@ -147,7 +165,7 @@ public class FileSystemRessourcesManagerTest {
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
         fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
 
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         fs.getRessources("g", "m", "v", "c2");
     }
 
@@ -156,7 +174,7 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
         fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         fs.getClassifiers("g", "m", "v2");
     }
 
@@ -165,7 +183,7 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
         fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         fs.getVersions("g", "m2");
     }
     @Test
@@ -173,7 +191,7 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
         fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
-        thrown.expect(DirectoryNotExistsException.class);
+        thrown.expect(RessourceNotFoundException.class);
         fs.getModules("g2");
         System.out.println("d");
     }

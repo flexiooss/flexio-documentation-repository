@@ -1,6 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceManagerException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
+import io.flexio.services.api.documentation.RessourcesManager.ExtractZipResut;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
@@ -85,8 +87,8 @@ public class CreateClassiferTest {
     public void ok(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public String addZipFileIn(InputStream is, String path) throws Exception {
-                return "";
+            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+                return new ExtractZipResut(true, path);
             }
         };
 
@@ -104,15 +106,14 @@ public class CreateClassiferTest {
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
         assertTrue(response.opt().status201().isPresent());
-        assertTrue(response.opt().status201().location().isPresent());
     }
 
     @Test
     public void parametersOkInternalError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public String addZipFileIn(InputStream is, String path) throws Exception {
-                throw new Exception();
+            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+                throw new RessourceManagerException();
             }
         };
 
@@ -136,8 +137,8 @@ public class CreateClassiferTest {
     public void parametersOkNoDir(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public String addZipFileIn(InputStream is, String path) throws Exception {
-                throw new DirectoryNotExistsException();
+            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+                throw new RessourceNotFoundException();
             }
         };
 

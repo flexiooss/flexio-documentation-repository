@@ -19,10 +19,10 @@ public class ExtractZip {
         this.zis = new ZipInputStream(this.is);
     }
 
-    public String extract() throws Exception {
+    public String extract() throws IOException {
         File folder = new File(this.outputDir);
         if(!folder.exists()){
-            folder.mkdir();
+            folder.mkdirs();
         }
 
         this.extractFiles();
@@ -31,7 +31,7 @@ public class ExtractZip {
         return outputDir;
     }
 
-    private void extractFiles() throws Exception{
+    private void extractFiles() throws IOException{
         ZipEntry ze = zis.getNextEntry();
 
         while (ze != null){
@@ -43,7 +43,7 @@ public class ExtractZip {
         log.trace("Unzip Done");
     }
 
-    private void extract1File(ZipEntry ze) throws Exception{
+    private void extract1File(ZipEntry ze) throws IOException{
         String fileName = ze.getName();
         File newFile = new File(this.outputDir + File.separator + fileName);
         new File(newFile.getParent()).mkdirs();

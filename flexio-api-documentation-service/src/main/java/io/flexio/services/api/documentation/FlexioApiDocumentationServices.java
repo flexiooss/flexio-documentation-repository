@@ -1,13 +1,8 @@
 package io.flexio.services.api.documentation;
 
-import com.fasterxml.jackson.core.JsonFactory;
 import io.undertow.Undertow;
-import org.codingmatters.poom.ci.pipeline.api.service.PoomCIApi;
-import org.codingmatters.poom.ci.pipeline.api.service.PoomCIPipelineService;
 import org.codingmatters.poom.services.support.Env;
 import org.codingmatters.rest.undertow.CdmHttpUndertowHandler;
-
-import java.io.File;
 
 public class FlexioApiDocumentationServices {
 

@@ -1,15 +1,13 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
+import io.flexio.services.api.documentation.RessourcesManager.ExtractZipResut;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
 import io.flexio.services.api.documentation.api.FilePostResponse;
-import io.flexio.services.api.documentation.api.filepostresponse.Status201;
-import io.flexio.services.api.documentation.api.filepostresponse.Status400;
-import io.flexio.services.api.documentation.api.filepostresponse.Status404;
-import io.flexio.services.api.documentation.api.filepostresponse.Status500;
+import io.flexio.services.api.documentation.api.filepostresponse.*;
 import io.flexio.services.api.documentation.api.types.Error;
+import io.flexio.services.api.documentation.api.types.Manifest;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.io.InputStream;
@@ -49,11 +47,19 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
                 filesPostRequest.classifier());
         try {
             InputStream is = filesPostRequest.payload().inputStream();
-            String resPath = this.fs.addZipFileIn(is, path);
-            return FilePostResponse.builder()
-                    .status201(Status201.builder().location(resPath).build())
-                    .build();
-        }catch (DirectoryNotExistsException e){
+            ExtractZipResut result = this.fs.addZipFileIn(is, path);
+            Manifest m = this.fs.getManifest(path);
+
+
+            if (result.isExtracted()){
+                return FilePostResponse.builder()
+                        .status201(Status201.builder().payload(m).build()).build();
+            }else{
+                return  FilePostResponse.builder().status200(
+                        Status200.builder().payload(m).build()
+                ).build();
+            }
+        }catch (RessourceNotFoundException e){
             return FilePostResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

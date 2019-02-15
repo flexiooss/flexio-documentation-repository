@@ -1,6 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
 import io.flexio.services.api.documentation.api.ClassifiersGetRequest;
@@ -55,7 +55,7 @@ public class GetClassifiersTest {
     public void okNoFile(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws Exception {
+            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -74,7 +74,7 @@ public class GetClassifiersTest {
     public void ok(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws Exception {
+            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
                 List<String>  list = new ArrayList<String>();
                 list.add("plok");
                 list.add("plokij");
@@ -97,8 +97,8 @@ public class GetClassifiersTest {
     public void okNoDirError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws Exception {
-                throw new DirectoryNotExistsException();
+            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
+                throw new RessourceNotFoundException();
             }
         };
 
@@ -118,8 +118,8 @@ public class GetClassifiersTest {
     public void okIntenalError(){
         RessourcesManager fs = new TestRessourcesManager(){
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws Exception {
-                throw new Exception();
+            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
+                throw new RessourceNotFoundException();
             }
         };
 

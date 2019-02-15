@@ -1,6 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.VersionsGetRequest;
 import io.flexio.services.api.documentation.api.VersionsGetResponse;
@@ -46,7 +46,7 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
             return VersionsGetResponse.builder().status200(
                     Status200.builder().payload(listVersions).build()
             ).build();
-        }catch (DirectoryNotExistsException e){
+        }catch (RessourceNotFoundException e){
             return VersionsGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

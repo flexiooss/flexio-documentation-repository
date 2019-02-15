@@ -1,6 +1,6 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.ClassifiersGetRequest;
 import io.flexio.services.api.documentation.api.ClassifiersGetResponse;
@@ -52,7 +52,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status200(
                     Status200.builder().payload(listClassifier).build())
                     .build();
-        }catch (DirectoryNotExistsException e){
+        }catch (RessourceNotFoundException e){
             return ClassifiersGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

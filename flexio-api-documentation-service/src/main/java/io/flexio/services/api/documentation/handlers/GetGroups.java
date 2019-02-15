@@ -1,12 +1,10 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.DirectoryNotExistsException;
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
 import io.flexio.services.api.documentation.api.GroupsGetRequest;
 import io.flexio.services.api.documentation.api.GroupsGetResponse;
 import io.flexio.services.api.documentation.api.groupsgetresponse.Status200;
-import io.flexio.services.api.documentation.api.groupsgetresponse.Status404;
 import io.flexio.services.api.documentation.api.groupsgetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Error;
 import io.flexio.services.api.documentation.api.types.Group;
@@ -39,7 +37,7 @@ public class GetGroups implements Function<GroupsGetRequest, GroupsGetResponse> 
             return GroupsGetResponse.builder().status200(
                     Status200.builder().payload(listGroups).build()
             ).build();
-        }catch (DirectoryNotExistsException e){
+        }catch (RessourceNotFoundException e){
             return GroupsGetResponse.builder().status500(
                     Status500.builder().payload(
                             Error.builder()
