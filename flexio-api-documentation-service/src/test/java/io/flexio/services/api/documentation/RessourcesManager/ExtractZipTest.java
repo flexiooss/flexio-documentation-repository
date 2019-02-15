@@ -38,4 +38,15 @@ public class ExtractZipTest {
         assertThat(location, is(tmpFolder.getRoot().getAbsolutePath()));
     }
 
+    @Test
+    public void extractBigFile() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("nullbytes.zip");
+
+
+        ExtractZip ez = new ExtractZip(is, tmpFolder.getRoot().getAbsolutePath());
+        String location = ez.extract();
+        assertThat(location, is(tmpFolder.getRoot().getAbsolutePath()));
+    }
+
 }

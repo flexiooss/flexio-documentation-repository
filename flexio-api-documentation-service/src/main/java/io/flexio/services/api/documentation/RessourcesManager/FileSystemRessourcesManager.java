@@ -19,20 +19,32 @@ import java.util.Date;
 import java.util.List;
 
 public class FileSystemRessourcesManager implements RessourcesManager {
+    private String ROOT_DIR;
     private String STORAGE_DIR;
+    private String MANIFEST_DIR ;
     private static CategorizedLogger log = CategorizedLogger.getLogger(FileSystemRessourcesManager.class);
 
 
     public FileSystemRessourcesManager(String storageDir) {
-        this.STORAGE_DIR = storageDir;
+        this.ROOT_DIR = storageDir;
 
-        log.info("Storage dir : "+ this.STORAGE_DIR);
-        File f = new File(STORAGE_DIR);
-        if (!f.exists()){
+
+        log.info("Root dir : "+ this.ROOT_DIR);
+        File f = new File(ROOT_DIR);
+        if (!f.exists()) {
             boolean created = f.mkdirs();
-            //Todo throw exception ???
-        }else{
-            f.isDirectory();
+        }
+
+        this.STORAGE_DIR = RessourcesManager.buildPath(ROOT_DIR, "storage");
+        f = new File(STORAGE_DIR);
+        if (!f.exists()) {
+            boolean created = f.mkdirs();
+        }
+
+        this.MANIFEST_DIR = RessourcesManager.buildPath(ROOT_DIR, "manifests");
+        f = new File(MANIFEST_DIR);
+        if (!f.exists()) {
+            boolean created = f.mkdirs();
         }
     }
 
@@ -42,6 +54,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         try {
             CopyInputStream cis = new CopyInputStream(is);
 
+            //Hash the zip file and check if matches with the md5 in the Manifest
             String md5 = getmd5(cis.getCopy());
             if (manifestFileExists(path)) {
                 Manifest m = getManifest(path);
@@ -68,30 +81,32 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     @Override
     public List<String> getModules(String group) throws RessourceNotFoundException {
-        return listFilesIn(RessourcesManager.buildPath(STORAGE_DIR, group));
+        String path = RessourcesManager.buildPath(STORAGE_DIR, group);
+        return listFilesIn(path);
     }
 
     @Override
     public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
-        return listFilesIn(RessourcesManager.buildPath(STORAGE_DIR, group, module));
+        String path = RessourcesManager.buildPath(STORAGE_DIR, group, module);
+        return listFilesIn(path);
     }
 
     @Override
     public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
-        return listFilesIn(RessourcesManager.buildPath(STORAGE_DIR, group, module, version));
+        String path = RessourcesManager.buildPath(STORAGE_DIR, group, module, version);
+        return listFilesIn(path);
     }
 
     @Override
     public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
-        return listFilesIn(RessourcesManager.buildPath(STORAGE_DIR, group, module, version, classifier));
+        String path = RessourcesManager.buildPath(STORAGE_DIR, group, module, version, classifier);
+        return listFilesIn(path);
     }
 
 
     private List<String> listFilesIn(String dir) throws RessourceNotFoundException {
         File base = new File(dir);
         log.trace("base path : " + base.getAbsolutePath());
-
-        System.out.println("plath : "+base.getAbsolutePath());
         if (!base.exists()) {
             throw new RessourceNotFoundException();
         }
@@ -99,10 +114,8 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         List<String> list = new ArrayList<String>();
         File[] files = base.listFiles();
         for (File f : files) {
-            if (!f.getName().equals(MANIFEST_FILE)) {
-                list.add(f.getName());
-                log.trace("File finded : " + f.getName());
-            }
+            list.add(f.getName());
+            log.trace("File finded : " + f.getName());
         }
         return list;
     }
@@ -118,11 +131,9 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         return md5;
     }
 
-
-
     @Override
     public Manifest getManifest(String path) throws IOException {
-        String finalPath = RessourcesManager.buildPath(this.STORAGE_DIR, path, MANIFEST_FILE);
+        String finalPath = manifestPath(path);
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode root = objectMapper.readTree(Paths.get(finalPath).toFile());
@@ -141,12 +152,17 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     @Override
     public void setManifest(String md5, String path) throws RessourceNotFoundException, IOException{
-        String finalPath = RessourcesManager.buildPath(this.STORAGE_DIR, path);
-        String finalPathJson = RessourcesManager.buildPath(finalPath, MANIFEST_FILE);
-        List<String> listFiles = listFilesIn(finalPath);
+        String pathFiles = RessourcesManager.buildPath(this.STORAGE_DIR, path);
+        String finalPathManifest = manifestPath(path);
+        List<String> listFiles = listFilesIn(pathFiles);
 
-        JsonGenerator jsonGenerator = new JsonFactory()
-                .createGenerator(new FileOutputStream(finalPathJson));
+        File f = new File(RessourcesManager.buildPath(this.MANIFEST_DIR, path));
+        if (!f.exists())
+            f.mkdirs();
+
+
+        FileOutputStream fos = new FileOutputStream(finalPathManifest);
+        JsonGenerator jsonGenerator = new JsonFactory().createGenerator(fos);
         jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
 
         jsonGenerator.writeStartObject(); // start root object
@@ -172,8 +188,13 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     @Override
     public boolean manifestFileExists(String path){
-        String finalPath = RessourcesManager.buildPath(this.STORAGE_DIR, path, MANIFEST_FILE);
+        String finalPath = manifestPath(path);
+
         File f = new File(finalPath);
         return f.exists();
+    }
+
+    private String manifestPath(String path){
+        return RessourcesManager.buildPath(this.MANIFEST_DIR, path, MANIFEST_FILE);
     }
 }

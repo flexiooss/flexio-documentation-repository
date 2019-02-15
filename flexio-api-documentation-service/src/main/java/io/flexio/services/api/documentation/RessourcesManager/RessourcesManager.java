@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface RessourcesManager {
-    final static String MANIFEST_FILE = "Manifest.json";
+    String MANIFEST_FILE = "Manifest.json";
 
     ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException;
 
@@ -36,7 +36,7 @@ public interface RessourcesManager {
 
     boolean manifestFileExists(String path);
 
-    public static String buildPath(String base, String... args){
+    static String buildPath(String base, String... args){
         String path = base;
         for(String s : args){
             path += File.separator + s;

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -33,10 +34,10 @@ public class FileSystemRessourcesManagerTest {
         InputStream is = classLoader.getResourceAsStream("html.zip");
         assertNotNull(is);
 
-        assertThat(fs.getmd5(is), is("422b5313ac3bc760d37fd1ca4b1756ca"));
+        assertThat(fs.getmd5(is), is("c67e46795eca063e483f16c6fba5fab6"));
         is = classLoader.getResourceAsStream("html2Files.zip");
 
-        assertThat(fs.getmd5(is), is("d22625c9c73f7c37764c22de83c5009f"));
+        assertThat(fs.getmd5(is), is("2121b2df6f35eab1599a5a29d9ec9f25"));
 
     }
 
@@ -49,7 +50,6 @@ public class FileSystemRessourcesManagerTest {
 
         ExtractZipResut result = fs.addZipFileIn(is, pathBase);
         assertThat(result.isExtracted(), is(true));
-        assertThat(fs.getStorageDir(), is(tmpFolder.getRoot().getAbsolutePath()));
         assertThat(result.getPath(), is(pathBase));
         
         int nbRessources = fs.getRessources("g1", "m1", "v1", "c").size();
@@ -75,7 +75,6 @@ public class FileSystemRessourcesManagerTest {
         fs.addZipFileIn(is, RessourcesManager.buildPath("g2","m","v", "c"));
         is = classLoader.getResourceAsStream("html.zip");
         fs.addZipFileIn(is, RessourcesManager.buildPath("g3","m","v", "c"));
-
 
         assertThat(fs.getGroups().size(), is(3));
     }
@@ -199,7 +198,6 @@ public class FileSystemRessourcesManagerTest {
     @Test
     public void addZipWithMultipleFile() throws Exception{
         ClassLoader classLoader = getClass().getClassLoader();
-        assertNotNull(classLoader);
         InputStream is;
         String group = "group1";
         String module = "module1";
@@ -211,5 +209,25 @@ public class FileSystemRessourcesManagerTest {
 
 
         assertThat(fs.getRessources(group, module, version, classifier).size(), is(2));
+    }
+
+    @Test
+    public void emptyZip() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("empty.zip");
+
+        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v", "c"));
+
+        assertThat(fs.getRessources("g", "m", "v", "c").size(), is(0));
+    }
+
+    @Test
+    public void zipWithManifestFile() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+        InputStream is = classLoader.getResourceAsStream("Manifest.zip");
+
+        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v", "c"));
+
+        assertThat(fs.getRessources("g", "m", "v", "c").size(), is(1));
     }
 }
