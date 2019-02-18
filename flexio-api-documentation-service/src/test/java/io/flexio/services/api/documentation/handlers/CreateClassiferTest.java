@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class CreateClassiferTest {
 
     @Test
-    public void noParameterRequest() {
+    public void givenNoParameter__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder().build();
@@ -31,7 +31,7 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void requestLackModule() {
+    public void givenNoModule__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
@@ -43,7 +43,20 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void requestLackVersion() {
+    public void givenNoVersion__thenResponse400() {
+        RessourcesManager fs = new TestRessourcesManager();
+
+        FilePostRequest fpr = FilePostRequest.builder()
+                .group("g")
+                .module("m")
+                .build();
+
+        FilePostResponse response = new CreateClassifer(fs).apply(fpr);
+        assertTrue(response.opt().status400().isPresent());
+    }
+
+    @Test
+    public void givenNoClassifier__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
@@ -57,20 +70,7 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void requestLackClassifier() {
-        RessourcesManager fs = new TestRessourcesManager();
-
-        FilePostRequest fpr = FilePostRequest.builder()
-                .group("g")
-                .module("m")
-                .build();
-
-        FilePostResponse response = new CreateClassifer(fs).apply(fpr);
-        assertTrue(response.opt().status400().isPresent());
-    }
-
-    @Test
-    public void requestLackFile() {
+    public void givenNoFile__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
@@ -85,7 +85,7 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void ok() {
+    public void givenOkParameters__whenCallTwice__thenReponse201AndReponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             private int cpt = 0;
 
@@ -131,7 +131,7 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void parametersOkInternalError() {
+    public void givenOkParameters__whenInternalException__thenResponse500() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
@@ -156,7 +156,7 @@ public class CreateClassiferTest {
     }
 
     @Test
-    public void parametersOkNoDir() {
+    public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {

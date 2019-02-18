@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class GetClassifiersTest {
     @Test
-    public void noParameterRequest() {
+    public void givenNoParameter__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder().build();
@@ -28,7 +28,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void lackModule() {
+    public void givenNoModule__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
@@ -40,7 +40,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void lackVersion() {
+    public void givenNoVersion__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
@@ -53,7 +53,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void okNoFile() {
+    public void givenNoClassifier__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
@@ -72,7 +72,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void ok() {
+    public void givenOkParameters__thenReponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
@@ -95,7 +95,7 @@ public class GetClassifiersTest {
     }
 
     @Test
-    public void okNoDirError() {
+    public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {

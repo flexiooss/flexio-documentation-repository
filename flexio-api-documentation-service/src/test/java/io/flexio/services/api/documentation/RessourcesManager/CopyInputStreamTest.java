@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class CopyInputStreamTest {
 
@@ -16,7 +17,7 @@ public class CopyInputStreamTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void test() throws IOException {
+    public void givenInputStream__thenCopyIsIdentic() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is = classLoader.getResourceAsStream("html.zip");

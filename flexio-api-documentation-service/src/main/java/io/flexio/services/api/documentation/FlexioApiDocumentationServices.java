@@ -1,6 +1,5 @@
 package io.flexio.services.api.documentation;
 
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
 import io.undertow.Undertow;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 import org.codingmatters.poom.services.support.Env;
@@ -12,10 +11,8 @@ public class FlexioApiDocumentationServices {
     public static void main(String[] args){
         String host = Env.mandatory(Env.SERVICE_HOST).asString();
         int port = Env.mandatory(Env.SERVICE_PORT).asInteger();
-        // TODO start service
         FlexioApiDocumentationServices service = new FlexioApiDocumentationServices(port, host, api());
         service.start();
-        log.info("Service started");
     }
 
     private Undertow server;

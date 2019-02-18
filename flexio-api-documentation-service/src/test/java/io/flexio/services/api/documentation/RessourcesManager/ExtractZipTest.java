@@ -18,7 +18,7 @@ public class ExtractZipTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void extract1File() throws Exception {
+    public void given1FileZipped__thenUnzip() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
 
@@ -28,7 +28,7 @@ public class ExtractZipTest {
     }
 
     @Test
-    public void extractMultipleFile() throws Exception {
+    public void givenMultipleFileZipped__thenUnzip() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html2Files.zip");
 

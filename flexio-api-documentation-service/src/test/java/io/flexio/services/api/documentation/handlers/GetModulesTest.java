@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 public class GetModulesTest {
     @Test
-    public void noParameterRequest() {
+    public void givenNoParameter__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
         ModulesGetRequest mgr = ModulesGetRequest.builder().build();
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
@@ -26,7 +26,7 @@ public class GetModulesTest {
     }
 
     @Test
-    public void ok() {
+    public void givenNoParameter__whenNoFile__thenResponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {
@@ -37,10 +37,12 @@ public class GetModulesTest {
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
 
         assertTrue(response.opt().status200().isPresent());
+        assertThat(response.opt().status200().payload().get().size(), is(0));
+
     }
 
     @Test
-    public void okWithFiles() {
+    public void givenNoParameter__when1File__thenResponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {
@@ -53,10 +55,11 @@ public class GetModulesTest {
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
 
         assertTrue(response.opt().status200().isPresent());
+        assertThat(response.opt().status200().payload().get().size(), is(1));
     }
 
     @Test
-    public void okDirectoryException() {
+    public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getModules(String group) throws RessourceNotFoundException {

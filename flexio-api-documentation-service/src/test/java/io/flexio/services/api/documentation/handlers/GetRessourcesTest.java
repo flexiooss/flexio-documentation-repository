@@ -21,7 +21,7 @@ import static org.junit.Assert.assertTrue;
 public class GetRessourcesTest {
 
     @Test
-    public void noParameterRequest() {
+    public void givenNoParameter__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder().build();
@@ -31,7 +31,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackModule() {
+    public void givenNoModule__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -43,7 +43,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackVersion() {
+    public void givenNoVersion__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -56,7 +56,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void lackClassifier() {
+    public void givenNoClassifier__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
@@ -70,7 +70,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void okNoFile() {
+    public void givenNoFile__thenResponse20000() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
@@ -90,7 +90,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void okNoDirError() {
+    public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
@@ -112,7 +112,7 @@ public class GetRessourcesTest {
     }
 
     @Test
-    public void okIOException() {
+    public void givenOkParameters__whenIOException__thenResponse500() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {

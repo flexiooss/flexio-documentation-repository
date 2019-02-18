@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class GetVersionsTest {
     @Test
-    public void noParameterRequest() {
+    public void givenNoParameter__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         VersionsGetRequest vgr = VersionsGetRequest.builder().build();
@@ -28,7 +28,7 @@ public class GetVersionsTest {
     }
 
     @Test
-    public void noModule() {
+    public void givenNoModule__thenResponse400() {
         RessourcesManager fs = new TestRessourcesManager();
 
         VersionsGetRequest vgr = VersionsGetRequest.builder()
@@ -40,7 +40,7 @@ public class GetVersionsTest {
     }
 
     @Test
-    public void okNoFile() {
+    public void givenNoParameter__whenNoFile__thenResponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
@@ -55,10 +55,11 @@ public class GetVersionsTest {
 
         VersionsGetResponse response = new GetVersions(fs).apply(vgr);
         assertTrue(response.opt().status200().isPresent());
+        assertThat(response.opt().status200().payload().get().size(), is(0));
     }
 
     @Test
-    public void ok() {
+    public void givenNoParameter__when2File__thenResponse200() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
@@ -80,7 +81,7 @@ public class GetVersionsTest {
     }
 
     @Test
-    public void okNoDirError() {
+    public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
             public List<String> getVersions(String group, String module) throws RessourceNotFoundException {

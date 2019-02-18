@@ -28,7 +28,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void md5() throws Exception {
+    public void given1Zip__thenMDMatches() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is = classLoader.getResourceAsStream("html.zip");
@@ -42,7 +42,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void addZipFile() throws Exception {
+    public void given1Zip__whenCalledTwice__then1FileExtractedOnlyTheFirstTime() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
         assertNotNull(is);
@@ -62,7 +62,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetGroups() throws Exception {
+    public void givenSend3Files__then3Groups() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is;
@@ -80,7 +80,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetModulesExceptions() throws Exception {
+    public void whenNoDir__thenThrowRessourceNotFound0Group() throws Exception {
         String group = "group1";
 
         thrown.expect(RessourceNotFoundException.class);
@@ -89,7 +89,7 @@ public class FileSystemRessourcesManagerTest {
 
 
     @Test
-    public void testGetModules() throws Exception {
+    public void givenSend3Files__then3Modules() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is;
@@ -106,7 +106,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetVersionsException() throws Exception {
+    public void whenNoDir__thenThrowRessourceNotFound0Version() throws Exception {
         String group = "group1";
         String module = "module1";
 
@@ -115,7 +115,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetVersions() throws Exception {
+    public void givenSend3Files__then3Versions() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         assertNotNull(classLoader);
         InputStream is;
@@ -133,7 +133,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetClassifiersExceptions() throws Exception {
+    public void whenNoDir__thenThrowRessourceNotFound0Classifier() throws Exception {
         String group = "group1";
         String module = "module1";
         String version = "v1";
@@ -142,7 +142,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void testGetClassifiers() throws Exception {
+    public void givenSend3Files__then3Classifiers() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is;
         String group = "group1";
@@ -159,45 +159,31 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void exceptionRessources() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("html2Files.zip");
-        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
-
+    public void givenNoDir__whenGetRessources__thenThrowRessourceNotFound() throws Exception {
         thrown.expect(RessourceNotFoundException.class);
         fs.getRessources("g", "m", "v", "c2");
     }
 
     @Test
-    public void exceptionClassifiers() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("html2Files.zip");
-        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
+    public void givenNoDir__whenGetClassifiers__thenThrowRessourceNotFound() throws Exception {
         thrown.expect(RessourceNotFoundException.class);
         fs.getClassifiers("g", "m", "v2");
     }
 
     @Test
-    public void exceptionVersions() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("html2Files.zip");
-        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
+    public void givenNoDir__whenGetVersions__thenThrowRessourceNotFound() throws Exception {
         thrown.expect(RessourceNotFoundException.class);
         fs.getVersions("g", "m2");
     }
 
     @Test
-    public void exceptionModules() throws Exception {
-        ClassLoader classLoader = getClass().getClassLoader();
-        InputStream is = classLoader.getResourceAsStream("html2Files.zip");
-        fs.addZipFileIn(is, RessourcesManager.buildPath("g", "m", "v1", "c"));
-        thrown.expect(RessourceNotFoundException.class);
+    public void givenNoDir__whenGetModules__thenThrowRessourceNotFound() throws Exception {
         fs.getModules("g2");
         System.out.println("d");
     }
 
     @Test
-    public void addZipWithMultipleFile() throws Exception {
+    public void givenZip2Files__then2Files() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is;
         String group = "group1";
@@ -213,7 +199,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void emptyZip() throws Exception {
+    public void givenEmptyZip__then0Files() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("empty.zip");
 
@@ -223,7 +209,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void zipWithManifestFile() throws Exception {
+    public void givenZipWithManifestFile__then1Files() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("Manifest.zip");
 
