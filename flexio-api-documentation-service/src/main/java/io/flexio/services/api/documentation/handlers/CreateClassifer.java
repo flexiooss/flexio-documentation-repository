@@ -33,7 +33,7 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
             return FilePostResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder()
-                                    .token(log.tokenized().info("Lack of a parameter.s", filesPostRequest))
+                                    .token(log.tokenized().info("Lack of a parameter.s"))
                                     .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
@@ -51,9 +51,11 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
 
 
             if (result.isExtracted()) {
+                log.info("FilePostRequest ok, no extracted");
                 return FilePostResponse.builder()
                         .status201(Status201.builder().payload(m).build()).build();
             } else {
+                log.info("FilePostRequest ok, extracted");
                 return FilePostResponse.builder().status200(
                         Status200.builder().payload(m).build()
                 ).build();

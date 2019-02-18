@@ -9,7 +9,6 @@ import io.flexio.services.api.documentation.api.types.Version;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status200;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status400;
 import io.flexio.services.api.documentation.api.versionsgetresponse.Status404;
-import io.flexio.services.api.documentation.api.versionsgetresponse.Status500;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
 import java.util.ArrayList;
@@ -31,7 +30,9 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
                 versionsGetRequest.opt().module().orElse("").isEmpty()) {
             return VersionsGetResponse.builder().status400(
                     Status400.builder().payload(
-                            Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
+                            Error.builder()
+                                    .token(log.tokenized().info("Lack of a parameter.s"))
+                                    .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
         }
@@ -42,6 +43,8 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
             for (String version : versions) {
                 listVersions.add(Version.builder().name(version).build());
             }
+
+            log.info("VersionsGetRequest normal use");
 
             return VersionsGetResponse.builder().status200(
                     Status200.builder().payload(listVersions).build()

@@ -33,6 +33,7 @@ public class GetGroups implements Function<GroupsGetRequest, GroupsGetResponse> 
                 listGroups.add(Group.builder().name(group).build());
             }
 
+            log.info("GroupsGetRequest normal use");
 
             return GroupsGetResponse.builder().status200(
                     Status200.builder().payload(listGroups).build()

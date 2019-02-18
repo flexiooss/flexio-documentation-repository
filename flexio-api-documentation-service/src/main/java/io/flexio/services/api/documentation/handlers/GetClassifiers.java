@@ -7,7 +7,6 @@ import io.flexio.services.api.documentation.api.ClassifiersGetResponse;
 import io.flexio.services.api.documentation.api.classifiersgetresponse.Status200;
 import io.flexio.services.api.documentation.api.classifiersgetresponse.Status400;
 import io.flexio.services.api.documentation.api.classifiersgetresponse.Status404;
-import io.flexio.services.api.documentation.api.classifiersgetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Classifier;
 import io.flexio.services.api.documentation.api.types.Error;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
@@ -33,7 +32,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status400(
                     Status400.builder().payload(
                             Error.builder()
-                                    .token(log.tokenized().info("Lack of parameter.s", classifiersGetRequest))
+                                    .token(log.tokenized().info("Lack of parameter.s"))
                                     .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
@@ -48,6 +47,8 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             for (String name : list) {
                 listClassifier.add(Classifier.builder().name(name).build());
             }
+
+            log.info("ClassifierGetRequest normal use");
 
             return ClassifiersGetResponse.builder().status200(
                     Status200.builder().payload(listClassifier).build())

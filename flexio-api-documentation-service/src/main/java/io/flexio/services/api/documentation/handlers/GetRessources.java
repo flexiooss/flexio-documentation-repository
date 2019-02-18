@@ -32,7 +32,9 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
         filesGetRequest.opt().classifier().orElse("").isEmpty()){
             return FileGetResponse.builder().status400(
                     Status400.builder().payload(
-                            Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
+                            Error.builder()
+                                    .token(log.tokenized().info("Lack of a parameter.s"))
+                                    .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
         }
@@ -50,6 +52,8 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
 
                 Manifest m = this.fs.getManifest(path);
 
+
+            log.info("FileGetRequest normal use");
             return FileGetResponse.builder().status200(
                     Status200.builder().payload(m).build()
             ).build();

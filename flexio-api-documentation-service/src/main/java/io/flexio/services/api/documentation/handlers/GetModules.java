@@ -7,7 +7,6 @@ import io.flexio.services.api.documentation.api.ModulesGetResponse;
 import io.flexio.services.api.documentation.api.modulesgetresponse.Status200;
 import io.flexio.services.api.documentation.api.modulesgetresponse.Status400;
 import io.flexio.services.api.documentation.api.modulesgetresponse.Status404;
-import io.flexio.services.api.documentation.api.modulesgetresponse.Status500;
 import io.flexio.services.api.documentation.api.types.Error;
 import io.flexio.services.api.documentation.api.types.Module;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
@@ -30,7 +29,9 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
         if (modulesGetRequest.opt().group().orElse("").isEmpty()){
             return ModulesGetResponse.builder().status400(
                     Status400.builder().payload(
-                            Error.builder().code(Error.Code.INCOMPLETE_REQUEST).build()
+                            Error.builder()
+                                    .token(log.tokenized().info("Lack of a parameter"))
+                                    .code(Error.Code.INCOMPLETE_REQUEST).build()
                     ).build()
             ).build();
         }
@@ -43,6 +44,8 @@ public class GetModules implements Function<ModulesGetRequest, ModulesGetRespons
             for (String module : modules){
                 listModules.add(Module.builder().name(module).build());
             }
+
+            log.info("ModulesGetRequest normal use");
 
             return ModulesGetResponse.builder().status200(
                     Status200.builder().payload(listModules).build()
