@@ -26,8 +26,9 @@ public class InputStreamCopyTest {
         assertNotNull(classLoader);
         InputStream is = classLoader.getResourceAsStream("html.zip");
         int nb = is.available();
-        InputStreamCopy cis = new InputStreamCopy(is, tmpFolderInputStream.getRoot().getAbsolutePath());
-        assertThat(nb, is(cis.getCopy().available()));
-    }
 
+        try (InputStreamCopy cis = new InputStreamCopy(is, tmpFolderInputStream.getRoot().getAbsolutePath())) {
+            assertThat(nb, is(cis.getCopy().available()));
+        }
+    }
 }

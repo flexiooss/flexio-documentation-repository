@@ -5,7 +5,7 @@ import org.codingmatters.poom.services.logging.CategorizedLogger;
 import java.io.*;
 import java.util.UUID;
 
-public class InputStreamCopy {
+public class InputStreamCopy implements AutoCloseable {
     private FileOutputStream fos;
     private File file;
 
@@ -25,11 +25,17 @@ public class InputStreamCopy {
             fos.write(buffer, 0, len);
         }
         fos.flush();
+        fos.close();
 
         this.file = new File(tmpDir);
     }
 
     public InputStream getCopy() throws FileNotFoundException {
         return new FileInputStream(file);
+    }
+
+    @Override
+    public void close() {
+        this.file.delete();
     }
 }

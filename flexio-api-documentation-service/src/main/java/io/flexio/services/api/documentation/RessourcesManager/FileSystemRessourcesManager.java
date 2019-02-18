@@ -52,23 +52,23 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     @Override
     public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
         try {
-            InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR);
-
-            //Hash the zip file and check if matches with the md5 in the Manifest
-            String md5 = getmd5(cis.getCopy());
-            if (manifestFileExists(path)) {
-                Manifest m = getManifest(path);
-                if (md5.equals(m.md5())) {
-                    return new ExtractZipResut(false, path);
+            try (InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR)) {
+                //Hash the zip file and check if matches with the md5 in the Manifest
+                String md5 = getmd5(cis.getCopy());
+                if (manifestFileExists(path)) {
+                    Manifest m = getManifest(path);
+                    if (md5.equals(m.md5())) {
+                        return new ExtractZipResut(false, path);
+                    }
                 }
+                String finalPath = RessourcesManager.buildPath(STORAGE_DIR, path);
+
+                ExtractZip ez = new ExtractZip(cis.getCopy(), finalPath);
+                ez.extract();
+                setManifest(md5, path);
+
+                return new ExtractZipResut(true, path);
             }
-            String finalPath = RessourcesManager.buildPath(STORAGE_DIR, path);
-
-            ExtractZip ez = new ExtractZip(cis.getCopy(), finalPath);
-            ez.extract();
-            setManifest(md5, path);
-
-            return new ExtractZipResut(true, path);
         } catch (IOException e) {
             throw new RessourceManagerException("Error get/set manifest", e);
         }
