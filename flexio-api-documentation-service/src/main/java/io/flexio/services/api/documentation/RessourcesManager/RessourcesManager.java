@@ -29,8 +29,6 @@ public interface RessourcesManager {
 
     Manifest getManifest(String path) throws IOException;
 
-    void setManifest(String md5, String path) throws RessourceNotFoundException, IOException;
-
     boolean manifestFileExists(String path);
 
     static String buildPath(String base, String... args){

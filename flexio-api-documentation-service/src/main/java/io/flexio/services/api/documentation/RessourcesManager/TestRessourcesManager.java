@@ -51,10 +51,6 @@ public class TestRessourcesManager implements RessourcesManager {
         return null;
     }
 
-    @Override
-    public void setManifest(String md5, String path) throws RessourceNotFoundException, IOException {
-
-    }
 
     @Override
     public boolean manifestFileExists(String path) {

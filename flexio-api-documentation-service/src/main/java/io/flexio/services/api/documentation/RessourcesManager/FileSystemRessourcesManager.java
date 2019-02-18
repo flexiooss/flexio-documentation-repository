@@ -140,8 +140,8 @@ public class FileSystemRessourcesManager implements RessourcesManager {
                 .uploadedAt(root.get("created-at").asText()).build();
     }
 
-    @Override
-    public void setManifest(String md5, String path) throws RessourceNotFoundException, IOException {
+
+    private void setManifest(String md5, String path) throws RessourceNotFoundException, IOException {
         String pathFiles = RessourcesManager.buildPath(this.STORAGE_DIR, path);
         String finalPathManifest = manifestPath(path);
         List<String> listFiles = listFilesIn(pathFiles);
