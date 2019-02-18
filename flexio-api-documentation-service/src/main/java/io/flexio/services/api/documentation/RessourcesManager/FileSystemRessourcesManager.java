@@ -129,7 +129,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     @Override
     public Manifest getManifest(String path) throws IOException {
-        String finalPath = manifestPath(path);
+        String finalPath = manifestFilePath(path);
         ObjectMapper objectMapper = new ObjectMapper();
 
         JsonNode root = objectMapper.readTree(Paths.get(finalPath).toFile());
@@ -149,7 +149,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     private void setManifest(String md5, String path) throws RessourceNotFoundException, IOException {
         String pathFiles = RessourcesManager.buildPath(this.STORAGE_DIR, path);
-        String finalPathManifest = manifestPath(path);
+        String finalPathManifest = manifestFilePath(path);
         List<String> listFiles = listFilesIn(pathFiles);
 
         File f = new File(RessourcesManager.buildPath(this.MANIFEST_DIR, path));
@@ -157,40 +157,40 @@ public class FileSystemRessourcesManager implements RessourcesManager {
             f.mkdirs();
 
 
-        FileOutputStream fos = new FileOutputStream(finalPathManifest);
-        JsonGenerator jsonGenerator = new JsonFactory().createGenerator(fos);
-        jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
+        try (FileOutputStream fos = new FileOutputStream(finalPathManifest)) {
+            JsonGenerator jsonGenerator = new JsonFactory().createGenerator(fos);
+            jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
 
-        jsonGenerator.writeStartObject(); // start root object
+            jsonGenerator.writeStartObject(); // start root object
 
-        ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ObjectMapper();
 
-        jsonGenerator.writeStringField("md5", md5);
+            jsonGenerator.writeStringField("md5", md5);
 
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        jsonGenerator.writeStringField("created-at", dateFormat.format(date));
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            jsonGenerator.writeStringField("created-at", dateFormat.format(date));
 
-        jsonGenerator.writeArrayFieldStart("files");
-        for (String file : listFiles) {
-            jsonGenerator.writeString(file);
+            jsonGenerator.writeArrayFieldStart("files");
+            for (String file : listFiles) {
+                jsonGenerator.writeString(file);
+            }
+            jsonGenerator.writeEndArray();
+
+            jsonGenerator.writeEndObject();
+            jsonGenerator.flush();
         }
-        jsonGenerator.writeEndArray();
-
-        jsonGenerator.writeEndObject();
-        jsonGenerator.flush();
-        jsonGenerator.close();
     }
 
     @Override
     public boolean manifestFileExists(String path) {
-        String finalPath = manifestPath(path);
+        String finalPath = manifestFilePath(path);
 
         File f = new File(finalPath);
         return f.exists();
     }
 
-    private String manifestPath(String path) {
+    private String manifestFilePath(String path) {
         return RessourcesManager.buildPath(this.MANIFEST_DIR, path, MANIFEST_FILE);
     }
 }
