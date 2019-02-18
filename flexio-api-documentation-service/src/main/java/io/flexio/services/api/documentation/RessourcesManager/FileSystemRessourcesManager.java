@@ -10,7 +10,10 @@ import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundExceptio
 import io.flexio.services.api.documentation.api.types.Manifest;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,40 +22,31 @@ import java.util.Date;
 import java.util.List;
 
 public class FileSystemRessourcesManager implements RessourcesManager {
-    private String ROOT_DIR;
     private String STORAGE_DIR;
-    private String MANIFEST_DIR ;
+    private String MANIFEST_DIR;
     private static CategorizedLogger log = CategorizedLogger.getLogger(FileSystemRessourcesManager.class);
 
 
-    public FileSystemRessourcesManager(String storageDir) {
-        this.ROOT_DIR = storageDir;
+    public FileSystemRessourcesManager(String storageDir, String manifestDir) {
+        this.STORAGE_DIR = storageDir;
+        this.MANIFEST_DIR = manifestDir;
 
+        log.info("Storage dir : " + this.STORAGE_DIR);
+        log.info("Manifest dir : " + this.MANIFEST_DIR);
 
-        log.info("Root dir : "+ this.ROOT_DIR);
-        File f = new File(ROOT_DIR);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
-
-        this.STORAGE_DIR = RessourcesManager.buildPath(ROOT_DIR, "storage");
+        File f;
         f = new File(STORAGE_DIR);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+        f.mkdirs();
 
-        this.MANIFEST_DIR = RessourcesManager.buildPath(ROOT_DIR, "manifests");
         f = new File(MANIFEST_DIR);
-        if (!f.exists()) {
-            f.mkdirs();
-        }
+        f.mkdirs();
     }
 
 
     @Override
     public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
         try {
-            CopyInputStream cis = new CopyInputStream(is);
+            InputStreamCopy cis = new InputStreamCopy(is);
 
             //Hash the zip file and check if matches with the md5 in the Manifest
             String md5 = getmd5(cis.getCopy());
@@ -69,7 +63,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
             setManifest(md5, path);
 
             return new ExtractZipResut(true, path);
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new RessourceManagerException("Error get/set manifest", e);
         }
     }
@@ -120,10 +114,6 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         return list;
     }
 
-    @Override
-    public String getStorageDir() {
-        return STORAGE_DIR;
-    }
 
     @Override
     public String getmd5(InputStream is) throws IOException {
@@ -140,7 +130,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         JsonNode nodeFiles = root.get("files");
 
         List<io.flexio.services.api.documentation.api.types.File> listFiles = new ArrayList<io.flexio.services.api.documentation.api.types.File>();
-        for(JsonNode node : nodeFiles){
+        for (JsonNode node : nodeFiles) {
             listFiles.add(io.flexio.services.api.documentation.api.types.File.builder().name(node.textValue()).build());
             log.trace(node.textValue());
         }
@@ -151,7 +141,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     }
 
     @Override
-    public void setManifest(String md5, String path) throws RessourceNotFoundException, IOException{
+    public void setManifest(String md5, String path) throws RessourceNotFoundException, IOException {
         String pathFiles = RessourcesManager.buildPath(this.STORAGE_DIR, path);
         String finalPathManifest = manifestPath(path);
         List<String> listFiles = listFilesIn(pathFiles);
@@ -176,7 +166,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         jsonGenerator.writeStringField("created-at", dateFormat.format(date));
 
         jsonGenerator.writeArrayFieldStart("files");
-        for(String file : listFiles){
+        for (String file : listFiles) {
             jsonGenerator.writeString(file);
         }
         jsonGenerator.writeEndArray();
@@ -187,14 +177,14 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     }
 
     @Override
-    public boolean manifestFileExists(String path){
+    public boolean manifestFileExists(String path) {
         String finalPath = manifestPath(path);
 
         File f = new File(finalPath);
         return f.exists();
     }
 
-    private String manifestPath(String path){
+    private String manifestPath(String path) {
         return RessourcesManager.buildPath(this.MANIFEST_DIR, path, MANIFEST_FILE);
     }
 }

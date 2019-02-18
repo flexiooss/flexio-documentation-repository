@@ -17,10 +17,13 @@ services:
       #- "5005:5005" #debugueur
     environment:
       STORAGE_DIR: /var/data
+      MANIFEST_DIR: /var/manifests
       LOG_LEVEL: TRACE
       #JVM_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" #debugueur
     volumes:
       - doc_storage_data:/var/data
+      - doc_manifest_data:/var/manifests
 
 volumes:
   doc_storage_data:
+  doc_manifest_data:

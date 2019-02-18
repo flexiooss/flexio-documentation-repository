@@ -40,10 +40,6 @@ public class TestRessourcesManager implements RessourcesManager {
         return null;
     }
 
-    @Override
-    public String getStorageDir() {
-        return null;
-    }
 
     @Override
     public String getmd5(InputStream is) throws IOException {

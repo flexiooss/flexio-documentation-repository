@@ -5,10 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CopyInputStream {
+public class InputStreamCopy {
     private ByteArrayOutputStream baos;
 
-    public CopyInputStream(InputStream is) throws IOException {
+    public InputStreamCopy(InputStream is) throws IOException {
         this.baos = new ByteArrayOutputStream();
 
         byte[] buffer = new byte[1024];

@@ -17,14 +17,18 @@ public class FileSystemRessourcesManagerTest {
     private FileSystemRessourcesManager fs;
 
     @Rule
-    public TemporaryFolder tmpFolder = new TemporaryFolder();
+    public TemporaryFolder tmpFolderStorage = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tmpFolderManifest = new TemporaryFolder();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Before
     public void setUp() {
-        this.fs = new FileSystemRessourcesManager(tmpFolder.getRoot().getAbsolutePath());
+        this.fs = new FileSystemRessourcesManager(
+                tmpFolderStorage.getRoot().getAbsolutePath(),
+                tmpFolderManifest.getRoot().getAbsolutePath());
     }
 
     @Test
@@ -38,7 +42,6 @@ public class FileSystemRessourcesManagerTest {
         is = classLoader.getResourceAsStream("html2Files.zip");
 
         assertThat(fs.getmd5(is), is("2121b2df6f35eab1599a5a29d9ec9f25"));
-
     }
 
     @Test
@@ -178,8 +181,8 @@ public class FileSystemRessourcesManagerTest {
 
     @Test
     public void givenNoDir__whenGetModules__thenThrowRessourceNotFound() throws Exception {
+        thrown.expect(RessourceNotFoundException.class);
         fs.getModules("g2");
-        System.out.println("d");
     }
 
     @Test

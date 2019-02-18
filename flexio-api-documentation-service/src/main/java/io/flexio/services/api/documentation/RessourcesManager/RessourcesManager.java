@@ -5,7 +5,6 @@ import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundExceptio
 import io.flexio.services.api.documentation.api.types.Manifest;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -25,8 +24,6 @@ public interface RessourcesManager {
     List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException;
 
     List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException;
-
-    String getStorageDir();
 
     String getmd5(InputStream is) throws NoSuchAlgorithmException, IOException;
 
