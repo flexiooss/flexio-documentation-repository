@@ -1,25 +1,35 @@
 package io.flexio.services.api.documentation.RessourcesManager;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import org.codingmatters.poom.services.logging.CategorizedLogger;
+
+import java.io.*;
+import java.util.UUID;
 
 public class InputStreamCopy {
-    private ByteArrayOutputStream baos;
+    private FileOutputStream fos;
+    private File file;
 
-    public InputStreamCopy(InputStream is) throws IOException {
-        this.baos = new ByteArrayOutputStream();
+    private static CategorizedLogger log = CategorizedLogger.getLogger(InputStreamCopy.class);
+
+
+    public InputStreamCopy(InputStream is, String tmpDir) throws IOException {
+        tmpDir += File.separator + "tmpInputStream" + UUID.randomUUID().toString();
+
+        log.trace("New tmp File : " + tmpDir);
+
+        this.fos = new FileOutputStream(tmpDir);
 
         byte[] buffer = new byte[1024];
         int len;
-        while ((len = is.read(buffer)) > -1 ) {
-            baos.write(buffer, 0, len);
+        while ((len = is.read(buffer)) > -1) {
+            fos.write(buffer, 0, len);
         }
-        baos.flush();
+        fos.flush();
+
+        this.file = new File(tmpDir);
     }
 
-    public InputStream getCopy(){
-        return new ByteArrayInputStream(baos.toByteArray());
+    public InputStream getCopy() throws FileNotFoundException {
+        return new FileInputStream(file);
     }
 }

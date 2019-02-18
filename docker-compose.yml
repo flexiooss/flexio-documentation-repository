@@ -18,6 +18,7 @@ services:
     environment:
       STORAGE_DIR: /var/data
       MANIFEST_DIR: /var/manifests
+      TMP_DIR: /tmp
       LOG_LEVEL: TRACE
       #JVM_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" #debugueur
     volumes:

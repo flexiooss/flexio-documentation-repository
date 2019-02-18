@@ -24,15 +24,18 @@ import java.util.List;
 public class FileSystemRessourcesManager implements RessourcesManager {
     private String STORAGE_DIR;
     private String MANIFEST_DIR;
+    private String TMP_DIR;
     private static CategorizedLogger log = CategorizedLogger.getLogger(FileSystemRessourcesManager.class);
 
 
-    public FileSystemRessourcesManager(String storageDir, String manifestDir) {
+    public FileSystemRessourcesManager(String storageDir, String manifestDir, String tmpDir) {
         this.STORAGE_DIR = storageDir;
         this.MANIFEST_DIR = manifestDir;
+        this.TMP_DIR = tmpDir;
 
         log.info("Storage dir : " + this.STORAGE_DIR);
         log.info("Manifest dir : " + this.MANIFEST_DIR);
+        log.info("Tmp dir : " + this.TMP_DIR);
 
         File f;
         f = new File(STORAGE_DIR);
@@ -40,13 +43,16 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
         f = new File(MANIFEST_DIR);
         f.mkdirs();
+
+        f = new File(TMP_DIR);
+        f.mkdirs();
     }
 
 
     @Override
     public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
         try {
-            InputStreamCopy cis = new InputStreamCopy(is);
+            InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR);
 
             //Hash the zip file and check if matches with the md5 in the Manifest
             String md5 = getmd5(cis.getCopy());

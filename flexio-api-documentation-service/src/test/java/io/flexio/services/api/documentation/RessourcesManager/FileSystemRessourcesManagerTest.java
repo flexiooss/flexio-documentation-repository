@@ -20,6 +20,8 @@ public class FileSystemRessourcesManagerTest {
     public TemporaryFolder tmpFolderStorage = new TemporaryFolder();
     @Rule
     public TemporaryFolder tmpFolderManifest = new TemporaryFolder();
+    @Rule
+    public TemporaryFolder tmpFolderInputStream = new TemporaryFolder();
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -28,7 +30,8 @@ public class FileSystemRessourcesManagerTest {
     public void setUp() {
         this.fs = new FileSystemRessourcesManager(
                 tmpFolderStorage.getRoot().getAbsolutePath(),
-                tmpFolderManifest.getRoot().getAbsolutePath());
+                tmpFolderManifest.getRoot().getAbsolutePath(),
+                tmpFolderInputStream.getRoot().getAbsolutePath());
     }
 
     @Test

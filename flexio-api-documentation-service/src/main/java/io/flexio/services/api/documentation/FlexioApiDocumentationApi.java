@@ -21,7 +21,10 @@ public class FlexioApiDocumentationApi {
         String manifestDir = Env.optional("MANIFEST_DIR")
                 .orElse(new Env.Var(System.getProperty("java.io.tmpdir"))).asString();
 
-        FileSystemRessourcesManager fs = new FileSystemRessourcesManager(storageDir, manifestDir);
+        String tmpDir = Env.optional("TMP_DIR")
+                .orElse(new Env.Var(System.getProperty("java.io.tmpdir"))).asString();
+
+        FileSystemRessourcesManager fs = new FileSystemRessourcesManager(storageDir, manifestDir, tmpDir);
 
         this.handlers = new FlexioApiDocumentationHandlers.Builder()
                 .filePostHandler(new CreateClassifer(fs) )
