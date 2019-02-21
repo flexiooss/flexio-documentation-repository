@@ -60,7 +60,7 @@ public class FileSystemResourcesManager implements ResourcesManager {
         try {
             VersionExtractor ve = new VersionExtractor(version);
             ve.parse();
-            String versionParsed = ve.prettyPrint();
+            String versionParsed = ve.prettyPrintVersionOnly();
             String pathResource = ResourcesManager.buildPath(group, module, versionParsed, classifier);
 
             try (InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR)) {
@@ -215,12 +215,12 @@ public class FileSystemResourcesManager implements ResourcesManager {
             VersionExtractor latestVe = new VersionExtractor(latestVersion);
             latestVe.parse();
             if (ve.compareTo(latestVe) >= 0) {
-                updateLatest(groupe, module, ve.prettyPrint());
+                updateLatest(groupe, module, ve.prettyPrintVersionOnly());
             }
         } catch (NoSuchFileException e) {
             log.trace("latest dir does not exists, created");
             try {
-                updateLatest(groupe, module, ve.prettyPrint());
+                updateLatest(groupe, module, ve.prettyPrintVersionOnly());
             } catch (IOException e2) {
                 throw new ResourceManagerException("Error updating latest dir", e2);
             }
@@ -237,12 +237,12 @@ public class FileSystemResourcesManager implements ResourcesManager {
             VersionExtractor latestSnapshotVe = new VersionExtractor(latestSnapshotVersion);
             latestSnapshotVe.parse();
             if (ve.compareTo(latestSnapshotVe) >= 0) {
-                updateLatestSnapshot(groupe, module, ve.prettyPrint());
+                updateLatestSnapshot(groupe, module, ve.prettyPrintVersionOnly());
             }
         } catch (NoSuchFileException e) {
             log.trace("latest dir does not exists, created");
             try {
-                updateLatestSnapshot(groupe, module, ve.prettyPrint());
+                updateLatestSnapshot(groupe, module, ve.prettyPrintVersionOnly());
             } catch (IOException e2) {
                 throw new ResourceManagerException("Error updating latest dir", e2);
             }

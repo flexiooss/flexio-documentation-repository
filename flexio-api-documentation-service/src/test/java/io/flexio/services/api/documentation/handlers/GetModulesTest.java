@@ -5,7 +5,6 @@ import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.ModulesGetRequest;
 import io.flexio.services.api.documentation.api.ModulesGetResponse;
-import io.flexio.services.api.documentation.api.types.Error;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ public class GetModulesTest {
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
 
         assertTrue(response.opt().status404().isPresent());
-        assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
     }
 
 }

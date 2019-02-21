@@ -24,7 +24,7 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
         Matcher m = p.matcher(this.version);
         if (m.matches()) {
             for (int i = 0; i <= m.groupCount(); i++) {
-                System.out.println("group " + i + " : " + m.group(i));
+                log.trace("group " + i + " : " + m.group(i));
 //                System.out.println(m.group(i).isEmpty());
             }
 
@@ -50,7 +50,7 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
 
             this.isSnapshot = m.group(4) != null;
 
-            log.info(this.version + " => version : " + this.prettyPrint() + " " + this.toString());
+            log.info(this.version + " => version : " + this.prettyPrintVersionOnly() + " " + this.toString());
         } else {
             throw new VersionNotRecognizedException("No match");
         }
@@ -100,7 +100,7 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
                 '}';
     }
 
-    public String prettyPrint() {
+    public String prettyPrintVersionOnly() {
         return this.major + "." + this.minor + "." + this.patch;
     }
 }

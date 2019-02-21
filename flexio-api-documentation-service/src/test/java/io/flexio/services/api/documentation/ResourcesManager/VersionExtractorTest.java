@@ -55,6 +55,13 @@ public class VersionExtractorTest {
         assertThat(ve.getMinor(), is(0));
         assertThat(ve.getPatch(), is(0));
         assertThat(ve.isSnapshot(), is(false));
+
+        ve = new VersionExtractor("15651.561615.15616517");
+        ve.parse();
+        assertThat(ve.getMajor(), is(15651));
+        assertThat(ve.getMinor(), is(561615));
+        assertThat(ve.getPatch(), is(15616517));
+        assertThat(ve.isSnapshot(), is(false));
     }
 
     @Test

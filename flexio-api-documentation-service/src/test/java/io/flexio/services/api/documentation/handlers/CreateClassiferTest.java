@@ -7,15 +7,12 @@ import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
 import io.flexio.services.api.documentation.api.FilePostResponse;
-import io.flexio.services.api.documentation.api.types.Error;
 import org.codingmatters.rest.api.types.File;
 import org.codingmatters.rest.io.Content;
 import org.junit.Test;
 
 import java.io.InputStream;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class CreateClassiferTest {
@@ -160,7 +157,7 @@ public class CreateClassiferTest {
         ResourcesManager fs = new TestResourcesManager() {
             @Override
             public ExtractZipResult addZipResource(InputStream is, String group, String module, String version, String classifier) throws ResourceNotFoundException, ResourceManagerException {
-                throw new ResourceNotFoundException();
+                throw new ResourceManagerException();
             }
         };
 
@@ -177,7 +174,6 @@ public class CreateClassiferTest {
                 .build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
-        assertTrue(response.opt().status404().isPresent());
-        assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
+        assertTrue(response.opt().status500().isPresent());
     }
 }
