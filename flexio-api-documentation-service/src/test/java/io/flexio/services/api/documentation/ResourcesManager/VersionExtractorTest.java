@@ -38,10 +38,20 @@ public class VersionExtractorTest {
     }
 
     @Test
-    public void Onedigit() throws Exception {
+    public void oneDigit() throws Exception {
         VersionExtractor ve = new VersionExtractor("1");
         ve.parse();
         assertThat(ve.getMajor(), is(1));
+        assertThat(ve.getMinor(), is(0));
+        assertThat(ve.getPatch(), is(0));
+        assertThat(ve.isSnapshot(), is(false));
+    }
+
+    @Test
+    public void misc() throws Exception {
+        VersionExtractor ve = new VersionExtractor("512");
+        ve.parse();
+        assertThat(ve.getMajor(), is(512));
         assertThat(ve.getMinor(), is(0));
         assertThat(ve.getPatch(), is(0));
         assertThat(ve.isSnapshot(), is(false));

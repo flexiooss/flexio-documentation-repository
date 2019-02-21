@@ -61,27 +61,27 @@ public class FileSystemResourcesManager implements ResourcesManager {
             VersionExtractor ve = new VersionExtractor(version);
             ve.parse();
             String versionParsed = ve.prettyPrint();
-            String pathRessource = ResourcesManager.buildPath(group, module, versionParsed, classifier);
+            String pathResource = ResourcesManager.buildPath(group, module, versionParsed, classifier);
 
             try (InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR)) {
                 //Hash the zip file and check if matches with the md5 in the Manifest
                 String md5 = getmd5(cis.getCopy());
-                if (manifestFileExists(pathRessource)) {
-                    Manifest m = getManifest(pathRessource);
+                if (manifestFileExists(pathResource)) {
+                    Manifest m = getManifest(pathResource);
                     if (md5.equals(m.md5())) {
-                        return new ExtractZipResult(false, pathRessource);
+                        return new ExtractZipResult(false, pathResource);
                     }
                 }
-                String finalPath = ResourcesManager.buildPath(STORAGE_DIR, pathRessource);
+                String finalPath = ResourcesManager.buildPath(STORAGE_DIR, pathResource);
 
                 ExtractZip ez = new ExtractZip(cis.getCopy(), finalPath);
                 ez.extract();
-                setManifest(md5, pathRessource);
+                setManifest(md5, pathResource);
 
                 updateLatestDirIfNecessary(group, module, ve);
-                updateLatestSnapshootDirIfNecessary(group, module, ve);
+                updateLatestSnapshotDirIfNecessary(group, module, ve);
 
-                return new ExtractZipResult(true, pathRessource);
+                return new ExtractZipResult(true, pathResource);
             }
         } catch (IOException e) {
             throw new ResourceManagerException("Error get/set manifest", e);
@@ -180,8 +180,6 @@ public class FileSystemResourcesManager implements ResourcesManager {
 
             jsonGenerator.writeStartObject(); // start root object
 
-            ObjectMapper objectMapper = new ObjectMapper();
-
             jsonGenerator.writeStringField("md5", md5);
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
@@ -233,18 +231,18 @@ public class FileSystemResourcesManager implements ResourcesManager {
         }
     }
 
-    private void updateLatestSnapshootDirIfNecessary(String groupe, String module, VersionExtractor ve) throws ResourceManagerException {
+    private void updateLatestSnapshotDirIfNecessary(String groupe, String module, VersionExtractor ve) throws ResourceManagerException {
         try {
-            String latestSnapshooVersion = getLatestSnapshootVersion(groupe, module);
-            VersionExtractor latestSnapshootVe = new VersionExtractor(latestSnapshooVersion);
-            latestSnapshootVe.parse();
-            if (ve.compareTo(latestSnapshootVe) >= 0) {
-                updateLatestSnapshoot(groupe, module, ve.prettyPrint());
+            String latestSnapshotVersion = getLatestSnapshotVersion(groupe, module);
+            VersionExtractor latestSnapshotVe = new VersionExtractor(latestSnapshotVersion);
+            latestSnapshotVe.parse();
+            if (ve.compareTo(latestSnapshotVe) >= 0) {
+                updateLatestSnapshot(groupe, module, ve.prettyPrint());
             }
         } catch (NoSuchFileException e) {
             log.trace("latest dir does not exists, created");
             try {
-                updateLatestSnapshoot(groupe, module, ve.prettyPrint());
+                updateLatestSnapshot(groupe, module, ve.prettyPrint());
             } catch (IOException e2) {
                 throw new ResourceManagerException("Error updating latest dir", e2);
             }
@@ -270,12 +268,12 @@ public class FileSystemResourcesManager implements ResourcesManager {
     }
 
 
-    public void updateLatestSnapshoot(String groupe, String module, String version) throws IOException {
+    public void updateLatestSnapshot(String groupe, String module, String version) throws IOException {
         Path source = Paths.get(this.STORAGE_DIR, groupe, module, version);
         log.trace("src " + source);
 
         Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_SNAPSHOT_DIR);
-        log.trace("latest snapshoot" + link);
+        log.trace("latest snapshot" + link);
         if (Files.exists(link)) {
             Files.delete(link);
         }
@@ -291,7 +289,7 @@ public class FileSystemResourcesManager implements ResourcesManager {
         return v;
     }
 
-    private String getLatestSnapshootVersion(String groupe, String module) throws IOException {
+    private String getLatestSnapshotVersion(String groupe, String module) throws IOException {
         Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_SNAPSHOT_DIR);
         Path l = Files.readSymbolicLink(link);
         String v = l.toString().substring(l.toString().lastIndexOf('/') + 1);

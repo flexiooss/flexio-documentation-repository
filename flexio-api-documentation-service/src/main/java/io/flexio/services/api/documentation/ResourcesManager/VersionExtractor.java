@@ -20,23 +20,25 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
     }
 
     public void parse() throws VersionNotRecognizedException {
-        Pattern p = Pattern.compile("(\\d+)?\\.?(\\d+)?\\.?(\\*|\\d+)(\\-\\w*)?");
+        Pattern p = Pattern.compile("(\\d*)?\\.?(\\d*)?\\.?(\\d*)(\\-\\w*)?");
         Matcher m = p.matcher(this.version);
         if (m.matches()) {
-            for (int i = 0; i <= m.groupCount(); i++)
-                log.trace("group " + i + " : " + m.group(i));
+            for (int i = 0; i <= m.groupCount(); i++) {
+                System.out.println("group " + i + " : " + m.group(i));
+//                System.out.println(m.group(i).isEmpty());
+            }
 
-            if (m.group(1) == null && m.group(2) == null && m.group(3) != null) {
+            if (!m.group(1).isEmpty() && m.group(2).isEmpty() && m.group(3).isEmpty()) {
                 // ex : 1
-                this.major = Integer.parseInt(m.group(3));
+                this.major = Integer.parseInt(m.group(1));
                 this.minor = 0;
                 this.patch = 0;
-            } else if (m.group(1) != null && m.group(2) == null && m.group(3) != null) {
+            } else if (!m.group(1).isEmpty() && !m.group(2).isEmpty() && m.group(3).isEmpty()) {
                 // ex : 1.2
                 this.major = Integer.parseInt(m.group(1));
-                this.minor = Integer.parseInt(m.group(3));
+                this.minor = Integer.parseInt(m.group(2));
                 this.patch = 0;
-            } else if (m.group(1) != null && m.group(2) != null && m.group(3) != null) {
+            } else if (!m.group(1).isEmpty() && !m.group(2).isEmpty() && !m.group(3).isEmpty()) {
                 // ex : 1.2.3
                 this.major = Integer.parseInt(m.group(1));
                 this.minor = Integer.parseInt(m.group(2));
