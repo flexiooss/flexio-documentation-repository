@@ -11,7 +11,7 @@ import java.util.List;
 
 public class TestRessourcesManager implements RessourcesManager {
     @Override
-    public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+    public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
         return null;
     }
 
@@ -55,5 +55,10 @@ public class TestRessourcesManager implements RessourcesManager {
     @Override
     public boolean manifestFileExists(String path) {
         return false;
+    }
+
+    @Override
+    public void updateLATEST(String path, String groupe, String module) throws IOException {
+
     }
 }

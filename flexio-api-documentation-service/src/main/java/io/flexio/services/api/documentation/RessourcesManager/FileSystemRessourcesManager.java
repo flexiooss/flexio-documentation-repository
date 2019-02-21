@@ -14,6 +14,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,6 +28,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     private String STORAGE_DIR;
     private String MANIFEST_DIR;
     private String TMP_DIR;
+    private String LATEST_DIR = "LATEST";
     private static CategorizedLogger log = CategorizedLogger.getLogger(FileSystemRessourcesManager.class);
 
 
@@ -50,24 +54,28 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
 
     @Override
-    public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+    public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
+        String pathRessource = RessourcesManager.buildPath(group, module, version, classifier);
+
         try {
             try (InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR)) {
                 //Hash the zip file and check if matches with the md5 in the Manifest
                 String md5 = getmd5(cis.getCopy());
-                if (manifestFileExists(path)) {
-                    Manifest m = getManifest(path);
+                if (manifestFileExists(pathRessource)) {
+                    Manifest m = getManifest(pathRessource);
                     if (md5.equals(m.md5())) {
-                        return new ExtractZipResut(false, path);
+                        return new ExtractZipResut(false, pathRessource);
                     }
                 }
-                String finalPath = RessourcesManager.buildPath(STORAGE_DIR, path);
+                String finalPath = RessourcesManager.buildPath(STORAGE_DIR, pathRessource);
 
                 ExtractZip ez = new ExtractZip(cis.getCopy(), finalPath);
                 ez.extract();
-                setManifest(md5, path);
+                setManifest(md5, pathRessource);
+                updateLATEST(RessourcesManager.buildPath(group, module, version), group, module);
 
-                return new ExtractZipResut(true, path);
+
+                return new ExtractZipResut(true, pathRessource);
             }
         } catch (IOException e) {
             throw new RessourceManagerException("Error get/set manifest", e);
@@ -192,5 +200,20 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     private String manifestFilePath(String path) {
         return RessourcesManager.buildPath(this.MANIFEST_DIR, path, MANIFEST_FILE);
+    }
+
+    @Override
+    public void updateLATEST(String path, String groupe, String module) throws IOException {
+        Path source = Paths.get(this.STORAGE_DIR, path);
+        log.trace("src " + source);
+
+        String latestDir = RessourcesManager.buildPath(this.STORAGE_DIR, groupe, module, this.LATEST_DIR);
+        Path link = Paths.get(latestDir);
+        log.trace("latest " + link);
+        if (Files.exists(link)) {
+            Files.delete(link);
+        }
+
+        Files.createSymbolicLink(link, source);
     }
 }

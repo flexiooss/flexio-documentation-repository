@@ -40,14 +40,14 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
         }
 
 
-        String path = RessourcesManager.buildPath(filesPostRequest.group(),
-                filesPostRequest.module(),
-                filesPostRequest.version(),
-                filesPostRequest.classifier());
+        String group = filesPostRequest.group();
+        String module = filesPostRequest.module();
+        String version = filesPostRequest.version();
+        String classifier = filesPostRequest.classifier();
         try {
             InputStream is = filesPostRequest.payload().inputStream();
-            ExtractZipResut result = this.fs.addZipFileIn(is, path);
-            Manifest m = this.fs.getManifest(path);
+            ExtractZipResut result = this.fs.addZipRessource(is, group, module, version, classifier);
+            Manifest m = this.fs.getManifest(RessourcesManager.buildPath(group, module, version, classifier));
 
 
             if (result.isExtracted()) {

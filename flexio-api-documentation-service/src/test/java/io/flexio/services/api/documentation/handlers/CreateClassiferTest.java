@@ -90,12 +90,12 @@ public class CreateClassiferTest {
             private int cpt = 0;
 
             @Override
-            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
                 if (cpt == 0) {
                     cpt++;
-                    return new ExtractZipResut(true, path);
+                    return new ExtractZipResut(true, group);
                 }
-                return new ExtractZipResut(false, path);
+                return new ExtractZipResut(false, group);
             }
         };
 
@@ -134,7 +134,7 @@ public class CreateClassiferTest {
     public void givenOkParameters__whenInternalException__thenResponse500() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
-            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
                 throw new RessourceManagerException();
             }
         };
@@ -159,7 +159,7 @@ public class CreateClassiferTest {
     public void givenOkParameters__whenNoDir__thenResponse404() {
         RessourcesManager fs = new TestRessourcesManager() {
             @Override
-            public ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException {
+            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
                 throw new RessourceNotFoundException();
             }
         };

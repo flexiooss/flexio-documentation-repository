@@ -13,7 +13,7 @@ import java.util.List;
 public interface RessourcesManager {
     String MANIFEST_FILE = "Manifest.json";
 
-    ExtractZipResut addZipFileIn(InputStream is, String path) throws RessourceNotFoundException, RessourceManagerException;
+    ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException;
 
     List<String> getGroups() throws RessourceNotFoundException;
 
@@ -30,6 +30,8 @@ public interface RessourcesManager {
     Manifest getManifest(String path) throws IOException;
 
     boolean manifestFileExists(String path);
+
+    void updateLATEST(String path, String groupe, String module) throws IOException;
 
     static String buildPath(String base, String... args){
         String path = base;
