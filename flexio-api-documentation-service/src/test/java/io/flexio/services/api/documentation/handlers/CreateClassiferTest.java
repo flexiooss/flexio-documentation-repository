@@ -132,7 +132,7 @@ public class CreateClassiferTest {
         ResourcesManager fs = new TestResourcesManager() {
             @Override
             public ExtractZipResult addZipResource(InputStream is, String group, String module, String version, String classifier) throws ResourceNotFoundException, ResourceManagerException {
-                throw new ResourceManagerException();
+                throw new ResourceNotFoundException();
             }
         };
 
@@ -149,7 +149,7 @@ public class CreateClassiferTest {
                 .build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
-        assertTrue(response.opt().status500().isPresent());
+        assertTrue(response.opt().status404().isPresent());
     }
 
     @Test
