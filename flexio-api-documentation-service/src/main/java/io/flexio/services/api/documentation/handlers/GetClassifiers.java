@@ -1,7 +1,7 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.api.ClassifiersGetRequest;
 import io.flexio.services.api.documentation.api.ClassifiersGetResponse;
 import io.flexio.services.api.documentation.api.classifiersgetresponse.Status200;
@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public class GetClassifiers implements Function<ClassifiersGetRequest, ClassifiersGetResponse> {
-    private RessourcesManager fs;
+    private ResourcesManager fs;
     private static CategorizedLogger log = CategorizedLogger.getLogger(GetClassifiers.class);
 
 
-    public GetClassifiers(RessourcesManager fs) {
+    public GetClassifiers(ResourcesManager fs) {
         this.fs = fs;
     }
 
@@ -53,7 +53,7 @@ public class GetClassifiers implements Function<ClassifiersGetRequest, Classifie
             return ClassifiersGetResponse.builder().status200(
                     Status200.builder().payload(listClassifier).build())
                     .build();
-        } catch (RessourceNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return ClassifiersGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

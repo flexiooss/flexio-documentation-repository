@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.VersionsGetRequest;
 import io.flexio.services.api.documentation.api.VersionsGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class GetVersionsTest {
     @Test
     public void givenNoParameter__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         VersionsGetRequest vgr = VersionsGetRequest.builder().build();
 
@@ -29,7 +29,7 @@ public class GetVersionsTest {
 
     @Test
     public void givenNoModule__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         VersionsGetRequest vgr = VersionsGetRequest.builder()
                 .group("g")
@@ -41,9 +41,9 @@ public class GetVersionsTest {
 
     @Test
     public void givenNoParameter__whenNoFile__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
+            public List<String> getVersions(String group, String module) throws ResourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -60,9 +60,9 @@ public class GetVersionsTest {
 
     @Test
     public void givenNoParameter__when2File__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
+            public List<String> getVersions(String group, String module) throws ResourceNotFoundException {
                 List<String> list = new ArrayList<String>();
                 list.add("plok");
                 list.add("plokij");
@@ -82,10 +82,10 @@ public class GetVersionsTest {
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse404() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getVersions(String group, String module) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
+            public List<String> getVersions(String group, String module) throws ResourceNotFoundException {
+                throw new ResourceNotFoundException();
             }
         };
 

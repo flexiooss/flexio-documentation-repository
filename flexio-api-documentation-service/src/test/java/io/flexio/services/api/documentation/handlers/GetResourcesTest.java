@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.FileGetRequest;
 import io.flexio.services.api.documentation.api.FileGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -18,46 +18,46 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class GetRessourcesTest {
+public class GetResourcesTest {
 
     @Test
     public void givenNoParameter__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder().build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status400().isPresent());
     }
 
     @Test
     public void givenNoModule__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
                 .group("g")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status400().isPresent());
     }
 
     @Test
     public void givenNoVersion__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
                 .group("g")
                 .module("m")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status400().isPresent());
     }
 
     @Test
     public void givenNoClassifier__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FileGetRequest fgr = FileGetRequest.builder()
                 .group("g")
@@ -65,15 +65,15 @@ public class GetRessourcesTest {
                 .version("v")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status400().isPresent());
     }
 
     @Test
     public void givenNoFile__thenResponse20000() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
+            public List<String> getResources(String group, String module, String version, String classifier) throws ResourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -85,16 +85,16 @@ public class GetRessourcesTest {
                 .classifier("c")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status200().isPresent());
     }
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse404() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
+            public List<String> getResources(String group, String module, String version, String classifier) throws ResourceNotFoundException {
+                throw new ResourceNotFoundException();
             }
         };
 
@@ -106,16 +106,16 @@ public class GetRessourcesTest {
                 .classifier("c")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status404().isPresent());
         assertThat(response.opt().status404().payload().code().get(), is(Error.Code.RESOURCE_NOT_FOUND));
     }
 
     @Test
     public void givenOkParameters__whenIOException__thenResponse500() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getRessources(String group, String module, String version, String classifier) throws RessourceNotFoundException {
+            public List<String> getResources(String group, String module, String version, String classifier) throws ResourceNotFoundException {
                 return null;
             }
 
@@ -133,7 +133,7 @@ public class GetRessourcesTest {
                 .classifier("c")
                 .build();
 
-        FileGetResponse response = new GetRessources(fs).apply(fgr);
+        FileGetResponse response = new GetResources(fs).apply(fgr);
         assertTrue(response.opt().status500().isPresent());
     }
 }

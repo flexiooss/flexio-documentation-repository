@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.ClassifiersGetRequest;
 import io.flexio.services.api.documentation.api.ClassifiersGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class GetClassifiersTest {
     @Test
     public void givenNoParameter__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder().build();
 
@@ -29,7 +29,7 @@ public class GetClassifiersTest {
 
     @Test
     public void givenNoModule__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
                 .group("g")
@@ -41,7 +41,7 @@ public class GetClassifiersTest {
 
     @Test
     public void givenNoVersion__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         ClassifiersGetRequest cgr = ClassifiersGetRequest.builder()
                 .group("g")
@@ -54,9 +54,9 @@ public class GetClassifiersTest {
 
     @Test
     public void givenNoClassifier__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
+            public List<String> getClassifiers(String group, String module, String version) throws ResourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -73,9 +73,9 @@ public class GetClassifiersTest {
 
     @Test
     public void givenOkParameters__thenReponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
+            public List<String> getClassifiers(String group, String module, String version) throws ResourceNotFoundException {
                 List<String> list = new ArrayList<String>();
                 list.add("plok");
                 list.add("plokij");
@@ -96,10 +96,10 @@ public class GetClassifiersTest {
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse404() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getClassifiers(String group, String module, String version) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
+            public List<String> getClassifiers(String group, String module, String version) throws ResourceNotFoundException {
+                throw new ResourceNotFoundException();
             }
         };
 

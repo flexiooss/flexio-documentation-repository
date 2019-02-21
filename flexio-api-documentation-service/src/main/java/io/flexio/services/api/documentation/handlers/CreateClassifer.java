@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.ExtractZipResut;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ExtractZipResult;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
 import io.flexio.services.api.documentation.api.FilePostResponse;
 import io.flexio.services.api.documentation.api.filepostresponse.*;
@@ -14,11 +14,11 @@ import java.io.InputStream;
 import java.util.function.Function;
 
 public class CreateClassifer implements Function<FilePostRequest, FilePostResponse> {
-    private RessourcesManager fs;
+    private ResourcesManager fs;
     private static CategorizedLogger log = CategorizedLogger.getLogger(CreateClassifer.class);
 
 
-    public CreateClassifer(RessourcesManager fs) {
+    public CreateClassifer(ResourcesManager fs) {
         this.fs = fs;
     }
 
@@ -46,8 +46,8 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
         String classifier = filesPostRequest.classifier();
         try {
             InputStream is = filesPostRequest.payload().inputStream();
-            ExtractZipResut result = this.fs.addZipRessource(is, group, module, version, classifier);
-            Manifest m = this.fs.getManifest(RessourcesManager.buildPath(group, module, version, classifier));
+            ExtractZipResult result = this.fs.addZipResource(is, group, module, version, classifier);
+            Manifest m = this.fs.getManifest(ResourcesManager.buildPath(group, module, version, classifier));
 
 
             if (result.isExtracted()) {
@@ -60,12 +60,12 @@ public class CreateClassifer implements Function<FilePostRequest, FilePostRespon
                         Status200.builder().payload(m).build()
                 ).build();
             }
-        } catch (RessourceNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return FilePostResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()
-                                    .token(log.tokenized().info("Directory not exists", e))
-                                    .code(Error.Code.RESOURCE_NOT_FOUND).build()
+                                    .token(log.tokenized().info("ResourceManager error", e))
+                                    .code(Error.Code.UNEXPECTED_ERROR).build()
                     ).build()
             ).build();
         } catch (Exception e) {

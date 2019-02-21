@@ -1,13 +1,10 @@
-package io.flexio.services.api.documentation.RessourcesManager;
+package io.flexio.services.api.documentation.ResourcesManager;
 
 import io.flexio.services.api.documentation.Exceptions.VersionNotRecognizedException;
-import io.flexio.services.api.documentation.api.types.Version;
-import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class VersionExtractorTest {
     @Test
@@ -17,7 +14,7 @@ public class VersionExtractorTest {
         assertThat(ve.getMajor(), is(1));
         assertThat(ve.getMinor(), is(0));
         assertThat(ve.getPatch(), is(0));
-        assertThat(ve.isSnapshoot(), is(true));
+        assertThat(ve.isSnapshot(), is(true));
     }
 
     @Test
@@ -27,7 +24,7 @@ public class VersionExtractorTest {
         assertThat(ve.getMajor(), is(1));
         assertThat(ve.getMinor(), is(2));
         assertThat(ve.getPatch(), is(2));
-        assertThat(ve.isSnapshoot(), is(false));
+        assertThat(ve.isSnapshot(), is(false));
     }
 
     @Test
@@ -37,7 +34,7 @@ public class VersionExtractorTest {
         assertThat(ve.getMajor(), is(1));
         assertThat(ve.getMinor(), is(2));
         assertThat(ve.getPatch(), is(0));
-        assertThat(ve.isSnapshoot(), is(false));
+        assertThat(ve.isSnapshot(), is(false));
     }
 
     @Test
@@ -47,27 +44,27 @@ public class VersionExtractorTest {
         assertThat(ve.getMajor(), is(1));
         assertThat(ve.getMinor(), is(0));
         assertThat(ve.getPatch(), is(0));
-        assertThat(ve.isSnapshoot(), is(false));
+        assertThat(ve.isSnapshot(), is(false));
     }
 
     @Test
-    public void oneDigitWithSnapshoot() throws Exception {
-        VersionExtractor ve = new VersionExtractor("5-dev");
+    public void oneDigitWithSnapshot() throws Exception {
+        VersionExtractor ve = new VersionExtractor("5-kjhvbjvkjv");
         ve.parse();
         assertThat(ve.getMajor(), is(5));
         assertThat(ve.getMinor(), is(0));
         assertThat(ve.getPatch(), is(0));
-        assertThat(ve.isSnapshoot(), is(true));
+        assertThat(ve.isSnapshot(), is(true));
     }
 
     @Test
-    public void twoDigitWithSnapshoot() throws Exception {
+    public void twoDigitWithSnapshot() throws Exception {
         VersionExtractor ve = new VersionExtractor("15.1-dev");
         ve.parse();
         assertThat(ve.getMajor(), is(15));
         assertThat(ve.getMinor(), is(1));
         assertThat(ve.getPatch(), is(0));
-        assertThat(ve.isSnapshoot(), is(true));
+        assertThat(ve.isSnapshot(), is(true));
     }
 
     @Test(expected = VersionNotRecognizedException.class)
@@ -147,11 +144,11 @@ public class VersionExtractorTest {
     }
 
     @Test
-    public void compareVersionWithSnapshoot() throws Exception {
+    public void compareVersionWithSnapshot() throws Exception {
         VersionExtractor ve1 = new VersionExtractor("5.0.0-dev");
         ve1.parse();
 
-        VersionExtractor ve2 = new VersionExtractor("147.0.0-snapshoot");
+        VersionExtractor ve2 = new VersionExtractor("147.0.0-snapshot");
         ve2.parse();
 
         assertThat(ve1.compareTo(ve2), lessThan(0));

@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.GroupsGetRequest;
 import io.flexio.services.api.documentation.api.GroupsGetResponse;
 import org.junit.Test;
@@ -17,9 +17,9 @@ import static org.junit.Assert.assertTrue;
 public class GetGroupsTest {
     @Test
     public void givenNoParameter__whenPathExists__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getGroups() throws RessourceNotFoundException {
+            public List<String> getGroups() throws ResourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -32,9 +32,9 @@ public class GetGroupsTest {
 
     @Test
     public void givenNoParameter__when1File__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getGroups() throws RessourceNotFoundException {
+            public List<String> getGroups() throws ResourceNotFoundException {
                 List<String> list = new ArrayList<String>();
                 list.add("plok");
                 return list;
@@ -50,10 +50,10 @@ public class GetGroupsTest {
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse500() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getGroups() throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
+            public List<String> getGroups() throws ResourceNotFoundException {
+                throw new ResourceNotFoundException();
             }
         };
 

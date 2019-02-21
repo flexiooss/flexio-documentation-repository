@@ -1,10 +1,10 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceManagerException;
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.ExtractZipResut;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceManagerException;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ExtractZipResult;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.FilePostRequest;
 import io.flexio.services.api.documentation.api.FilePostResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -22,7 +22,7 @@ public class CreateClassiferTest {
 
     @Test
     public void givenNoParameter__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder().build();
 
@@ -32,7 +32,7 @@ public class CreateClassiferTest {
 
     @Test
     public void givenNoModule__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
@@ -44,7 +44,7 @@ public class CreateClassiferTest {
 
     @Test
     public void givenNoVersion__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
@@ -57,7 +57,7 @@ public class CreateClassiferTest {
 
     @Test
     public void givenNoClassifier__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
@@ -71,7 +71,7 @@ public class CreateClassiferTest {
 
     @Test
     public void givenNoFile__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
 
         FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
@@ -86,16 +86,16 @@ public class CreateClassiferTest {
 
     @Test
     public void givenOkParameters__whenCallTwice__thenReponse201AndReponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             private int cpt = 0;
 
             @Override
-            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
+            public ExtractZipResult addZipResource(InputStream is, String group, String module, String version, String classifier) throws ResourceNotFoundException, ResourceManagerException {
                 if (cpt == 0) {
                     cpt++;
-                    return new ExtractZipResut(true, group);
+                    return new ExtractZipResult(true, group);
                 }
-                return new ExtractZipResut(false, group);
+                return new ExtractZipResult(false, group);
             }
         };
 
@@ -132,10 +132,10 @@ public class CreateClassiferTest {
 
     @Test
     public void givenOkParameters__whenInternalException__thenResponse500() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
-                throw new RessourceManagerException();
+            public ExtractZipResult addZipResource(InputStream is, String group, String module, String version, String classifier) throws ResourceNotFoundException, ResourceManagerException {
+                throw new ResourceManagerException();
             }
         };
 
@@ -157,10 +157,10 @@ public class CreateClassiferTest {
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse404() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
-                throw new RessourceNotFoundException();
+            public ExtractZipResult addZipResource(InputStream is, String group, String module, String version, String classifier) throws ResourceNotFoundException, ResourceManagerException {
+                throw new ResourceNotFoundException();
             }
         };
 

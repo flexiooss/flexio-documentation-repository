@@ -1,8 +1,8 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
-import io.flexio.services.api.documentation.RessourcesManager.TestRessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.TestResourcesManager;
 import io.flexio.services.api.documentation.api.ModulesGetRequest;
 import io.flexio.services.api.documentation.api.ModulesGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class GetModulesTest {
     @Test
     public void givenNoParameter__thenResponse400() {
-        RessourcesManager fs = new TestRessourcesManager();
+        ResourcesManager fs = new TestResourcesManager();
         ModulesGetRequest mgr = ModulesGetRequest.builder().build();
         ModulesGetResponse response = new GetModules(fs).apply(mgr);
 
@@ -27,9 +27,9 @@ public class GetModulesTest {
 
     @Test
     public void givenNoParameter__whenNoFile__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getModules(String group) throws RessourceNotFoundException {
+            public List<String> getModules(String group) throws ResourceNotFoundException {
                 return new ArrayList<String>();
             }
         };
@@ -43,9 +43,9 @@ public class GetModulesTest {
 
     @Test
     public void givenNoParameter__when1File__thenResponse200() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getModules(String group) throws RessourceNotFoundException {
+            public List<String> getModules(String group) throws ResourceNotFoundException {
                 List<String> list = new ArrayList<String>();
                 list.add("plok");
                 return list;
@@ -60,10 +60,10 @@ public class GetModulesTest {
 
     @Test
     public void givenOkParameters__whenNoDir__thenResponse404() {
-        RessourcesManager fs = new TestRessourcesManager() {
+        ResourcesManager fs = new TestResourcesManager() {
             @Override
-            public List<String> getModules(String group) throws RessourceNotFoundException {
-                throw new RessourceNotFoundException();
+            public List<String> getModules(String group) throws ResourceNotFoundException {
+                throw new ResourceNotFoundException();
             }
         };
         ModulesGetRequest mgr = ModulesGetRequest.builder().group("g").build();

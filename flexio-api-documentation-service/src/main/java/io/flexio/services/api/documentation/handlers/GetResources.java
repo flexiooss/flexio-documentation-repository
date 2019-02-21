@@ -1,7 +1,7 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.api.FileGetRequest;
 import io.flexio.services.api.documentation.api.FileGetResponse;
 import io.flexio.services.api.documentation.api.filegetresponse.Status200;
@@ -15,12 +15,12 @@ import org.codingmatters.poom.services.logging.CategorizedLogger;
 import java.util.List;
 import java.util.function.Function;
 
-public class GetRessources implements Function<FileGetRequest, FileGetResponse> {
-    private RessourcesManager fs;
-    private static CategorizedLogger log = CategorizedLogger.getLogger(GetRessources.class);
+public class GetResources implements Function<FileGetRequest, FileGetResponse> {
+    private static CategorizedLogger log = CategorizedLogger.getLogger(GetResources.class);
+    private ResourcesManager fs;
 
 
-    public GetRessources(RessourcesManager fs) {
+    public GetResources(ResourcesManager fs) {
         this.fs = fs;
     }
 
@@ -40,12 +40,12 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
         }
 
         try {
-            List<String> files = this.fs.getRessources(filesGetRequest.group(),
+            List<String> files = this.fs.getResources(filesGetRequest.group(),
                     filesGetRequest.module(),
                     filesGetRequest.version(),
                     filesGetRequest.classifier());
 
-            String path = RessourcesManager.buildPath(filesGetRequest.group(),
+            String path = ResourcesManager.buildPath(filesGetRequest.group(),
                     filesGetRequest.module(),
                     filesGetRequest.version(),
                     filesGetRequest.classifier());
@@ -57,7 +57,7 @@ public class GetRessources implements Function<FileGetRequest, FileGetResponse> 
             return FileGetResponse.builder().status200(
                     Status200.builder().payload(m).build()
             ).build();
-        }catch (RessourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             return FileGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

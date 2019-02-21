@@ -1,10 +1,10 @@
-package io.flexio.services.api.documentation.RessourcesManager;
+package io.flexio.services.api.documentation.ResourcesManager;
 
-public class ExtractZipResut {
+public class ExtractZipResult {
     private boolean extracted;
     private String path;
 
-    public ExtractZipResut(boolean extracted, String path) {
+    public ExtractZipResult(boolean extracted, String path) {
         this.extracted = extracted;
         this.path = path;
     }

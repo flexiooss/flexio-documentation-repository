@@ -1,8 +1,11 @@
-package io.flexio.services.api.documentation.RessourcesManager;
+package io.flexio.services.api.documentation.ResourcesManager;
 
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 

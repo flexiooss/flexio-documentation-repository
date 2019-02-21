@@ -1,7 +1,7 @@
 package io.flexio.services.api.documentation.handlers;
 
-import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
-import io.flexio.services.api.documentation.RessourcesManager.RessourcesManager;
+import io.flexio.services.api.documentation.Exceptions.ResourceNotFoundException;
+import io.flexio.services.api.documentation.ResourcesManager.ResourcesManager;
 import io.flexio.services.api.documentation.api.VersionsGetRequest;
 import io.flexio.services.api.documentation.api.VersionsGetResponse;
 import io.flexio.services.api.documentation.api.types.Error;
@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.function.Function;
 
 public class GetVersions implements Function<VersionsGetRequest, VersionsGetResponse> {
-    private RessourcesManager fs;
+    private ResourcesManager fs;
     private static CategorizedLogger log = CategorizedLogger.getLogger(GetVersions.class);
 
 
-    public GetVersions(RessourcesManager fs) {
+    public GetVersions(ResourcesManager fs) {
         this.fs = fs;
     }
 
@@ -49,7 +49,7 @@ public class GetVersions implements Function<VersionsGetRequest, VersionsGetResp
             return VersionsGetResponse.builder().status200(
                     Status200.builder().payload(listVersions).build()
             ).build();
-        } catch (RessourceNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             return VersionsGetResponse.builder().status404(
                     Status404.builder().payload(
                             Error.builder()

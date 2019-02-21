@@ -1,4 +1,4 @@
-package io.flexio.services.api.documentation.RessourcesManager;
+package io.flexio.services.api.documentation.ResourcesManager;
 
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 

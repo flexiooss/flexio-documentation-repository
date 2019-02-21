@@ -1,7 +1,7 @@
 package io.flexio.services.api.documentation;
 
 import com.fasterxml.jackson.core.JsonFactory;
-import io.flexio.services.api.documentation.RessourcesManager.FileSystemRessourcesManager;
+import io.flexio.services.api.documentation.ResourcesManager.FileSystemResourcesManager;
 import io.flexio.services.api.documentation.api.FlexioApiDocumentationDescriptor;
 import io.flexio.services.api.documentation.api.FlexioApiDocumentationHandlers;
 import io.flexio.services.api.documentation.handlers.*;
@@ -24,11 +24,11 @@ public class FlexioApiDocumentationApi {
         String tmpDir = Env.optional("TMP_DIR")
                 .orElse(new Env.Var(System.getProperty("java.io.tmpdir"))).asString();
 
-        FileSystemRessourcesManager fs = new FileSystemRessourcesManager(storageDir, manifestDir, tmpDir);
+        FileSystemResourcesManager fs = new FileSystemResourcesManager(storageDir, manifestDir, tmpDir);
 
         this.handlers = new FlexioApiDocumentationHandlers.Builder()
                 .filePostHandler(new CreateClassifer(fs) )
-                .fileGetHandler(new GetRessources(fs))
+                .fileGetHandler(new GetResources(fs))
                 .classifiersGetHandler(new GetClassifiers(fs))
                 .groupsGetHandler(new GetGroups(fs))
                 .modulesGetHandler(new GetModules(fs))
