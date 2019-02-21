@@ -217,7 +217,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
             String latestVersion = getLatestVersion(groupe, module);
             VersionExtractor latestVe = new VersionExtractor(latestVersion);
             latestVe.parse();
-            if (ve.compareTo(latestVe) > 0) {
+            if (ve.compareTo(latestVe) >= 0) {
                 updateLatest(groupe, module, ve.prettyPrint());
             }
         } catch (NoSuchFileException e) {
@@ -239,7 +239,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
             String latestSnapshooVersion = getLatestSnapshootVersion(groupe, module);
             VersionExtractor latestSnapshootVe = new VersionExtractor(latestSnapshooVersion);
             latestSnapshootVe.parse();
-            if (ve.compareTo(latestSnapshootVe) > 0) {
+            if (ve.compareTo(latestSnapshootVe) >= 0) {
                 updateLatestSnapshoot(groupe, module, ve.prettyPrint());
             }
         } catch (NoSuchFileException e) {

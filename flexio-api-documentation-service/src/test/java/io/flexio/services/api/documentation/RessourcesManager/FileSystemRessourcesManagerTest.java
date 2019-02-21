@@ -239,7 +239,7 @@ public class FileSystemRessourcesManagerTest {
     }
 
     @Test
-    public void givenMultipleVersions__whenCallLatest__thenLatestIsTheHigher() throws Exception {
+    public void givenTwoVersions__whenCallLatest__thenLatestIsTheHigher() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
 
         InputStream is = classLoader.getResourceAsStream("html.zip");
@@ -250,6 +250,16 @@ public class FileSystemRessourcesManagerTest {
         ExtractZipResut res = fs.addZipRessource(is,"g", "m", "2", "c");
 
         assertThat(fs.getRessources("g", "m", "LATEST", "c").size(), is(2));
+    }
+
+    @Test
+    public void givenMultipleVersions__whenCallLatest__thenLatestIsTheHigher() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+
+        InputStream is = classLoader.getResourceAsStream("html.zip");
+        fs.addZipRessource(is,"g", "m", "1.0.0", "c");
+
+
     }
 
 

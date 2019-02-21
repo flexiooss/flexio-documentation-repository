@@ -68,13 +68,16 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
     @Override
     public int compareTo(VersionExtractor ve) {
         if (this.major > ve.getMajor()) {
-            return 3;
-        } else if (this.minor > ve.getMinor()) {
-            return 2;
-        } else if (this.patch > ve.getPatch()) {
             return 1;
-        } else if (this.patch == ve.getPatch()) {
-            return 0;
+        }else if (this.major == ve.getMajor()){
+            if (this.minor > ve.getMinor()){
+                return 1;
+            }else if (this.minor == ve.getMinor()){
+                if (this.patch > ve.getPatch()){
+                    return 1;
+                }else if (this.patch == ve.getPatch())
+                    return 0;
+            }
         }
         return -1;
     }
