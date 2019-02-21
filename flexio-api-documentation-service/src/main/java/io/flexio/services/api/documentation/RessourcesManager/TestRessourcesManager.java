@@ -58,7 +58,7 @@ public class TestRessourcesManager implements RessourcesManager {
     }
 
     @Override
-    public void updateLATEST(String path, String groupe, String module) throws IOException {
+    public void updateLatest(String path, String groupe, String module) throws IOException {
 
     }
 }

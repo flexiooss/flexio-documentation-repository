@@ -31,7 +31,7 @@ public interface RessourcesManager {
 
     boolean manifestFileExists(String path);
 
-    void updateLATEST(String path, String groupe, String module) throws IOException;
+    void updateLatest(String path, String groupe, String module) throws IOException;
 
     static String buildPath(String base, String... args){
         String path = base;

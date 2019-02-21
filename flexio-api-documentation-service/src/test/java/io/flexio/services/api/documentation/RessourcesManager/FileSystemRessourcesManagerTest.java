@@ -53,18 +53,18 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("html.zip");
         assertNotNull(is);
-        String pathBase = RessourcesManager.buildPath("g1", "m1", "v1", "c");
+        String pathBase = RessourcesManager.buildPath("g1", "m1", "1.0.0", "c");
 
-        ExtractZipResut result = fs.addZipRessource(is, "g1", "m1", "v1", "c");
+        ExtractZipResut result = fs.addZipRessource(is, "g1", "m1", "1.0.0", "c");
         assertThat(result.isExtracted(), is(true));
         assertThat(result.getPath(), is(pathBase));
 
-        int nbRessources = fs.getRessources("g1", "m1", "v1", "c").size();
+        int nbRessources = fs.getRessources("g1", "m1", "1.0.0", "c").size();
         assertThat(nbRessources, is(1));
 
         is = classLoader.getResourceAsStream("html.zip");
-        pathBase = RessourcesManager.buildPath("g1", "m1", "v1", "c");
-        result = fs.addZipRessource(is, "g1", "m1", "v1", "c");
+        pathBase = RessourcesManager.buildPath("g1", "m1", "1.0.0", "c");
+        result = fs.addZipRessource(is, "g1", "m1", "1.0.0", "c");
         assertThat(result.isExtracted(), is(false));
     }
 
@@ -77,13 +77,26 @@ public class FileSystemRessourcesManagerTest {
         assertThat(fs.getGroups().size(), is(0));
 
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is,"g1", "m", "v", "c");
+        fs.addZipRessource(is,"g1", "m", "1", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is,"g2", "m", "v", "c");
+        fs.addZipRessource(is,"g2", "m", "1", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is,"g3", "m", "v", "c");
+        fs.addZipRessource(is,"g3", "m", "1", "c");
 
         assertThat(fs.getGroups().size(), is(3));
+    }
+
+    @Test
+    public void givenVersion1__thenGetVersion1_0_0() throws Exception{
+        ClassLoader classLoader = getClass().getClassLoader();
+        assertNotNull(classLoader);
+        InputStream is;
+
+        assertThat(fs.getGroups().size(), is(0));
+
+        is = classLoader.getResourceAsStream("html.zip");
+        ExtractZipResut result = fs.addZipRessource(is, "g1", "m1", "1", "c");
+        assertThat(result.getPath(), is("g1/m1/1.0.0/c"));
     }
 
     @Test
@@ -103,11 +116,11 @@ public class FileSystemRessourcesManagerTest {
 
         String group = "group1";
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, "m1", "v", "c");
+        fs.addZipRessource(is, group, "m1", "1", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, "m2", "v", "c");
+        fs.addZipRessource(is, group, "m2", "1", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, "m3", "v", "c");
+        fs.addZipRessource(is, group, "m3", "1", "c");
 
         assertThat(fs.getModules(group).size(), is(3));
     }
@@ -130,20 +143,20 @@ public class FileSystemRessourcesManagerTest {
         String module = "module1";
 
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, module, "v1", "c");
+        fs.addZipRessource(is, group, module, "1", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, module, "v2", "c");
+        fs.addZipRessource(is, group, module, "2", "c");
         is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is, group, module, "v3", "c");
+        fs.addZipRessource(is, group, module, "3", "c");
 
-        assertThat(fs.getVersions(group, module).size(), is(4)); // 3 + Latest + Latest-Snapshoot
+        assertThat(fs.getVersions(group, module).size(), is(5)); // 3 + Latest + Latest-Snapshoot
     }
 
     @Test
     public void whenNoDir__thenThrowRessourceNotFound0Classifier() throws Exception {
         String group = "group1";
         String module = "module1";
-        String version = "v1";
+        String version = "1";
         thrown.expect(RessourceNotFoundException.class);
         assertThat(fs.getClassifiers(group, module, version).size(), is(0));
     }
@@ -154,7 +167,7 @@ public class FileSystemRessourcesManagerTest {
         InputStream is;
         String group = "group1";
         String module = "module1";
-        String version = "v1";
+        String version = "1.0.0";
         is = classLoader.getResourceAsStream("html.zip");
         fs.addZipRessource(is, group, module, version, "c1");
         is = classLoader.getResourceAsStream("html.zip");
@@ -174,7 +187,7 @@ public class FileSystemRessourcesManagerTest {
     @Test
     public void givenNoDir__whenGetClassifiers__thenThrowRessourceNotFound() throws Exception {
         thrown.expect(RessourceNotFoundException.class);
-        fs.getClassifiers("g", "m", "v2");
+        fs.getClassifiers("g", "m", "2");
     }
 
     @Test
@@ -195,7 +208,7 @@ public class FileSystemRessourcesManagerTest {
         InputStream is;
         String group = "group1";
         String module = "module1";
-        String version = "v1";
+        String version = "2.4.51";
         String classifier = "c";
 
         is = classLoader.getResourceAsStream("html2Files.zip");
@@ -210,9 +223,9 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
         InputStream is = classLoader.getResourceAsStream("empty.zip");
 
-        fs.addZipRessource(is,"g", "m", "v", "c");
+        fs.addZipRessource(is,"g", "m", "3.14.15", "c");
 
-        assertThat(fs.getRessources("g", "m", "v", "c").size(), is(0));
+        assertThat(fs.getRessources("g", "m", "3.14.15", "c").size(), is(0));
     }
 
     @Test
@@ -220,23 +233,24 @@ public class FileSystemRessourcesManagerTest {
         ClassLoader classLoader = getClass().getClassLoader();
 
         InputStream is = classLoader.getResourceAsStream("Manifest.zip");
-        fs.addZipRessource(is,"g", "m", "v", "c");
+        fs.addZipRessource(is,"g", "m", "0.5.1", "c");
 
-        assertThat(fs.getRessources("g", "m", "v", "c").size(), is(1));
+        assertThat(fs.getRessources("g", "m", "0.5.1", "c").size(), is(1));
     }
 
     @Test
-
-    public void givenMultipleZip__whenCallLatest__thenLATESTDirHasLastZip() throws Exception {
+    public void givenMultipleVersions__whenCallLatest__thenLatestIsTheHigher() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
 
         InputStream is = classLoader.getResourceAsStream("html.zip");
-        fs.addZipRessource(is,"g", "m", "v1", "c");
+        fs.addZipRessource(is,"g", "m", "1", "c");
         assertThat(fs.getRessources("g", "m", "LATEST", "c").size(), is(1));
 
         is = classLoader.getResourceAsStream("html2Files.zip");
-        ExtractZipResut res = fs.addZipRessource(is,"g", "m", "v2", "c");
+        ExtractZipResut res = fs.addZipRessource(is,"g", "m", "2", "c");
 
         assertThat(fs.getRessources("g", "m", "LATEST", "c").size(), is(2));
     }
+
+
 }

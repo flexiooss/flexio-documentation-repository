@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.flexio.services.api.documentation.Exceptions.RessourceManagerException;
 import io.flexio.services.api.documentation.Exceptions.RessourceNotFoundException;
+import io.flexio.services.api.documentation.Exceptions.VersionNotRecognizedException;
 import io.flexio.services.api.documentation.api.types.Manifest;
 import org.codingmatters.poom.services.logging.CategorizedLogger;
 
@@ -14,8 +15,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -29,6 +30,8 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     private String MANIFEST_DIR;
     private String TMP_DIR;
     private String LATEST_DIR = "LATEST";
+    private String LATEST_SNAPSHOOT_DIR = "LATEST-SNAPSHOOT";
+
     private static CategorizedLogger log = CategorizedLogger.getLogger(FileSystemRessourcesManager.class);
 
 
@@ -55,9 +58,12 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
     @Override
     public ExtractZipResut addZipRessource(InputStream is, String group, String module, String version, String classifier) throws RessourceNotFoundException, RessourceManagerException {
-        String pathRessource = RessourcesManager.buildPath(group, module, version, classifier);
-
         try {
+            VersionExtractor ve = new VersionExtractor(version);
+            ve.parse();
+            String versionParsed = ve.prettyPrint();
+            String pathRessource = RessourcesManager.buildPath(group, module, versionParsed, classifier);
+
             try (InputStreamCopy cis = new InputStreamCopy(is, this.TMP_DIR)) {
                 //Hash the zip file and check if matches with the md5 in the Manifest
                 String md5 = getmd5(cis.getCopy());
@@ -72,14 +78,38 @@ public class FileSystemRessourcesManager implements RessourcesManager {
                 ExtractZip ez = new ExtractZip(cis.getCopy(), finalPath);
                 ez.extract();
                 setManifest(md5, pathRessource);
-                updateLATEST(RessourcesManager.buildPath(group, module, version), group, module);
 
+                try {
+                    String latestVersion = getLatestVersion(group, module);
+                    VersionExtractor latestVe = new VersionExtractor(latestVersion);
+                    latestVe.parse();
+                    if (ve.compareTo(latestVe) > 0) {
+                        updateLatest(group, module, ve.prettyPrint());
+                    }
+                } catch (NoSuchFileException e) {
+                    updateLatest(group, module, ve.prettyPrint());
+                }
+
+                try {
+                    String latestSnapshooVersion = getLatestSnapshootVersion(group, module);
+                    VersionExtractor latestSnapshootVe = new VersionExtractor(latestSnapshooVersion);
+                    latestSnapshootVe.parse();
+                    if (ve.compareTo(latestSnapshootVe) > 0) {
+                        updateLatestSnapshoot(group, module, ve.prettyPrint());
+                    }
+
+                } catch (IOException e) {
+                    updateLatestSnapshoot(group, module, ve.prettyPrint());
+                }
 
                 return new ExtractZipResut(true, pathRessource);
             }
         } catch (IOException e) {
             throw new RessourceManagerException("Error get/set manifest", e);
+        } catch (VersionNotRecognizedException e) {
+            throw new RessourceManagerException("Error parse version");
         }
+
     }
 
     @Override
@@ -203,12 +233,11 @@ public class FileSystemRessourcesManager implements RessourcesManager {
     }
 
     @Override
-    public void updateLATEST(String path, String groupe, String module) throws IOException {
-        Path source = Paths.get(this.STORAGE_DIR, path);
+    public void updateLatest(String groupe, String module, String version) throws IOException {
+        Path source = Paths.get(this.STORAGE_DIR, groupe, module, version);
         log.trace("src " + source);
 
-        String latestDir = RessourcesManager.buildPath(this.STORAGE_DIR, groupe, module, this.LATEST_DIR);
-        Path link = Paths.get(latestDir);
+        Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_DIR);
         log.trace("latest " + link);
         if (Files.exists(link)) {
             Files.delete(link);
@@ -216,4 +245,35 @@ public class FileSystemRessourcesManager implements RessourcesManager {
 
         Files.createSymbolicLink(link, source);
     }
+
+
+    public void updateLatestSnapshoot(String groupe, String module, String version) throws IOException {
+        Path source = Paths.get(this.STORAGE_DIR, groupe, module, version);
+        log.trace("src " + source);
+
+        Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_SNAPSHOOT_DIR);
+        log.trace("latest snapshoot" + link);
+        if (Files.exists(link)) {
+            Files.delete(link);
+        }
+
+        Files.createSymbolicLink(link, source);
+    }
+
+    private String getLatestVersion(String groupe, String module) throws IOException {
+        Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_DIR);
+        Path l = Files.readSymbolicLink(link);
+        String v = l.toString().substring(l.toString().lastIndexOf('/') + 1);
+        log.trace("Latest "+ v);
+        return v;
+    }
+
+    private String getLatestSnapshootVersion(String groupe, String module) throws IOException {
+        Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_SNAPSHOOT_DIR);
+        Path l = Files.readSymbolicLink(link);
+        String v = l.toString().substring(l.toString().lastIndexOf('/') + 1);
+        log.trace("Latest "+ v);
+        return v;
+    }
+
 }
