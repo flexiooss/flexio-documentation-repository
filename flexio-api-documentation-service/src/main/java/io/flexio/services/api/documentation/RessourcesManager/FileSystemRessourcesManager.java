@@ -79,28 +79,8 @@ public class FileSystemRessourcesManager implements RessourcesManager {
                 ez.extract();
                 setManifest(md5, pathRessource);
 
-                try {
-                    String latestVersion = getLatestVersion(group, module);
-                    VersionExtractor latestVe = new VersionExtractor(latestVersion);
-                    latestVe.parse();
-                    if (ve.compareTo(latestVe) > 0) {
-                        updateLatest(group, module, ve.prettyPrint());
-                    }
-                } catch (NoSuchFileException e) {
-                    updateLatest(group, module, ve.prettyPrint());
-                }
-
-                try {
-                    String latestSnapshooVersion = getLatestSnapshootVersion(group, module);
-                    VersionExtractor latestSnapshootVe = new VersionExtractor(latestSnapshooVersion);
-                    latestSnapshootVe.parse();
-                    if (ve.compareTo(latestSnapshootVe) > 0) {
-                        updateLatestSnapshoot(group, module, ve.prettyPrint());
-                    }
-
-                } catch (IOException e) {
-                    updateLatestSnapshoot(group, module, ve.prettyPrint());
-                }
+                updateLatestDirIfNecessary(group, module, ve);
+                updateLatestSnapshootDirIfNecessary(group, module, ve);
 
                 return new ExtractZipResut(true, pathRessource);
             }
@@ -232,6 +212,50 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         return RessourcesManager.buildPath(this.MANIFEST_DIR, path, MANIFEST_FILE);
     }
 
+    private void updateLatestDirIfNecessary(String groupe, String module, VersionExtractor ve) throws RessourceManagerException {
+        try {
+            String latestVersion = getLatestVersion(groupe, module);
+            VersionExtractor latestVe = new VersionExtractor(latestVersion);
+            latestVe.parse();
+            if (ve.compareTo(latestVe) > 0) {
+                updateLatest(groupe, module, ve.prettyPrint());
+            }
+        } catch (NoSuchFileException e) {
+            log.trace("latest dir does not exists, created");
+            try {
+                updateLatest(groupe, module, ve.prettyPrint());
+            } catch (IOException e2) {
+                throw new RessourceManagerException("Error updating latest dir", e2);
+            }
+        } catch (IOException e) {
+            throw new RessourceManagerException("Error updating latest dir", e);
+        } catch (VersionNotRecognizedException e) {
+            throw new RessourceManagerException("Error parsing version latest dir");
+        }
+    }
+
+    private void updateLatestSnapshootDirIfNecessary(String groupe, String module, VersionExtractor ve) throws RessourceManagerException {
+        try {
+            String latestSnapshooVersion = getLatestSnapshootVersion(groupe, module);
+            VersionExtractor latestSnapshootVe = new VersionExtractor(latestSnapshooVersion);
+            latestSnapshootVe.parse();
+            if (ve.compareTo(latestSnapshootVe) > 0) {
+                updateLatestSnapshoot(groupe, module, ve.prettyPrint());
+            }
+        } catch (NoSuchFileException e) {
+            log.trace("latest dir does not exists, created");
+            try {
+                updateLatestSnapshoot(groupe, module, ve.prettyPrint());
+            } catch (IOException e2) {
+                throw new RessourceManagerException("Error updating latest dir", e2);
+            }
+        } catch (IOException e) {
+            throw new RessourceManagerException("Error updating latest dir", e);
+        } catch (VersionNotRecognizedException e) {
+            throw new RessourceManagerException("Error parsing version latest dir");
+        }
+    }
+
     @Override
     public void updateLatest(String groupe, String module, String version) throws IOException {
         Path source = Paths.get(this.STORAGE_DIR, groupe, module, version);
@@ -264,7 +288,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_DIR);
         Path l = Files.readSymbolicLink(link);
         String v = l.toString().substring(l.toString().lastIndexOf('/') + 1);
-        log.trace("Latest "+ v);
+        log.trace("Latest " + v);
         return v;
     }
 
@@ -272,7 +296,7 @@ public class FileSystemRessourcesManager implements RessourcesManager {
         Path link = Paths.get(this.STORAGE_DIR, groupe, module, this.LATEST_SNAPSHOOT_DIR);
         Path l = Files.readSymbolicLink(link);
         String v = l.toString().substring(l.toString().lastIndexOf('/') + 1);
-        log.trace("Latest "+ v);
+        log.trace("Latest " + v);
         return v;
     }
 
