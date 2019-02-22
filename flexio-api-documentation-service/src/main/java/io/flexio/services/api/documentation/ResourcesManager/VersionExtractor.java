@@ -11,6 +11,7 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
 
     private String version;
     private boolean isSnapshot;
+    private String snap;
     private int major;
     private int minor;
     private int patch;
@@ -49,8 +50,11 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
 
 
             this.isSnapshot = m.group(4) != null;
+            if (this.isSnapshot) {
+                this.snap = m.group(4);
+            }
 
-            log.info(this.version + " => version : " + this.prettyPrintVersionOnly() + " " + this.toString());
+            log.info(this.version + " => version : " + this.prettyPrint() + " " + this.toString());
         } else {
             throw new VersionNotRecognizedException("No match");
         }
@@ -90,6 +94,10 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
         return patch;
     }
 
+    public String getSnap() {
+        return snap;
+    }
+
     @Override
     public String toString() {
         return "VersionExtractor{" +
@@ -100,7 +108,11 @@ public class VersionExtractor implements Comparable<VersionExtractor> {
                 '}';
     }
 
-    public String prettyPrintVersionOnly() {
-        return this.major + "." + this.minor + "." + this.patch;
+    public String prettyPrint() {
+        String res = this.major + "." + this.minor + "." + this.patch;
+        if (this.isSnapshot) {
+            res += this.snap;
+        }
+        return res;
     }
 }

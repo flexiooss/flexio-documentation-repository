@@ -34,6 +34,8 @@
         <dependency>
             <groupId>org.codingmatters.poom</groupId>
             <artifactId>poom-services-support</artifactId>
+            <version>1.2.0-SNAPSHOT</version>
+            <!--Version temporaire-->
         </dependency>
         <dependency>
             <groupId>io.undertow</groupId>
@@ -42,8 +44,9 @@
         <dependency>
             <groupId>org.codingmatters.poom.ci</groupId>
             <artifactId>poom-ci-pipeline-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
             <scope>compile</scope>
+            <version>0.0.1-SNAPSHOT</version>
+            <!--version temporaire-->
         </dependency>
         <dependency>
             <groupId>commons-codec</groupId>

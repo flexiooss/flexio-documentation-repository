@@ -147,7 +147,25 @@ public class FileSystemResourcesManagerTest {
         is = classLoader.getResourceAsStream("html.zip");
         fs.addZipResource(is, group, module, "3", "c");
 
-        assertThat(fs.getVersions(group, module).size(), is(5)); // 3 + Latest + Latest-Snapshoot
+        assertThat(fs.getVersions(group, module).size(), is(4)); // 3 + Latest
+    }
+
+    @Test
+    public void givenSend3FilesSnapshoot__then3Versions() throws Exception {
+        ClassLoader classLoader = getClass().getClassLoader();
+        assertNotNull(classLoader);
+        InputStream is;
+        String group = "group1";
+        String module = "module1";
+
+        is = classLoader.getResourceAsStream("html.zip");
+        fs.addZipResource(is, group, module, "1", "c");
+        is = classLoader.getResourceAsStream("html.zip");
+        fs.addZipResource(is, group, module, "2-snapshot", "c");
+        is = classLoader.getResourceAsStream("html.zip");
+        fs.addZipResource(is, group, module, "3", "c");
+
+        assertThat(fs.getVersions(group, module).size(), is(5)); // 3 + Latest + snapshot
     }
 
     @Test
@@ -271,5 +289,4 @@ public class FileSystemResourcesManagerTest {
 
         assertThat(fs.getResources("g", "m", "LATEST", "c").size(), is(2));
     }
-
 }

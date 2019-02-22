@@ -73,7 +73,7 @@ public class CreateClassiferTest {
         FilePostRequest fpr = FilePostRequest.builder()
                 .group("g")
                 .module("m")
-                .version("v1")
+                .version("1.0.0")
                 .classifier("c")
                 .build();
 
@@ -105,7 +105,7 @@ public class CreateClassiferTest {
                 .group("g")
                 .module("m")
                 .classifier("c")
-                .version("v1")
+                .version("1.0.0")
                 .build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
@@ -121,7 +121,7 @@ public class CreateClassiferTest {
                 .group("g")
                 .module("m")
                 .classifier("c")
-                .version("v1")
+                .version("1.0.0")
                 .build();
         response = new CreateClassifer(fs).apply(fpr);
         assertTrue(response.opt().status200().isPresent());
@@ -145,7 +145,7 @@ public class CreateClassiferTest {
                 .group("g")
                 .module("m")
                 .classifier("c")
-                .version("v1")
+                .version("1.0.0")
                 .build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);
@@ -170,7 +170,7 @@ public class CreateClassiferTest {
                 .group("g")
                 .module("m")
                 .classifier("c")
-                .version("v1")
+                .version("1.0.0")
                 .build();
 
         FilePostResponse response = new CreateClassifer(fs).apply(fpr);

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertThat;
 public class VersionExtractorTest {
     @Test
     public void nominal() throws Exception {
-        VersionExtractor ve = new VersionExtractor("1.0.0-SNAPSHOOT");
+        VersionExtractor ve = new VersionExtractor("1.0.0-SNAPSHOT");
         ve.parse();
         assertThat(ve.getMajor(), is(1));
         assertThat(ve.getMinor(), is(0));
@@ -62,6 +62,7 @@ public class VersionExtractorTest {
         assertThat(ve.getMinor(), is(561615));
         assertThat(ve.getPatch(), is(15616517));
         assertThat(ve.isSnapshot(), is(false));
+        assertThat(ve.prettyPrint(), is("15651.561615.15616517"));
     }
 
     @Test
@@ -81,7 +82,9 @@ public class VersionExtractorTest {
         assertThat(ve.getMajor(), is(15));
         assertThat(ve.getMinor(), is(1));
         assertThat(ve.getPatch(), is(0));
+        assertThat(ve.getSnap(), is("-dev"));
         assertThat(ve.isSnapshot(), is(true));
+        assertThat(ve.prettyPrint(), is("15.1.0-dev"));
     }
 
     @Test(expected = VersionNotRecognizedException.class)
