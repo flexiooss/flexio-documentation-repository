@@ -13,11 +13,6 @@
     <artifactId>flexio-api-documentation-service</artifactId>
     <name>${project.groupId}:${project.artifactId}</name>
 
-    <properties>
-        <docker.image.namespace>${codingmatters.docker.namespace}</docker.image.namespace>
-        <service.class.name>io.flexio.services.api.documentation.FlexioApiDocumentationServices</service.class.name>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
@@ -66,7 +61,6 @@
 
     <build>
         <plugins>
-
             <plugin>
                 <groupId>org.codingmatters.rest</groupId>
                 <artifactId>cdm-rest-maven-plugin</artifactId>
@@ -109,7 +103,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -131,6 +124,40 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.3</version>
+                <configuration>
+                    <append>true</append>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>post-unit-test</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <docker.image.namespace>${codingmatters.docker.namespace}</docker.image.namespace>
+        <service.class.name>io.flexio.services.api.documentation.FlexioApiDocumentationServices</service.class.name>
+
+        <sonar.host.url>http://127.0.0.1:9001</sonar.host.url>
+        <sonar.login>44dd668d185ec92db3e2e053fd9d05b018e88d3d</sonar.login>
+        <sonar.projectKey>api-documentation</sonar.projectKey>
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+        <sonar.language>java</sonar.language>
+    </properties>
 </project>

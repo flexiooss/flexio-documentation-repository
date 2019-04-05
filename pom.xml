@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.codingmatters.poom</groupId>
         <artifactId>poom-services</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0-SNAPSHOT</version>
     </parent>
 
     <groupId>io.flexio.services.api.documentation</groupId>
@@ -50,6 +50,17 @@
                 <groupId>io.flexio.services.api.documentation</groupId>
                 <artifactId>flexio-api-documentation-client</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codingmatters.poom</groupId>
+                <artifactId>poom-services-production-support</artifactId>
+                <classifier>docker-support</classifier>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codingmatters.poom</groupId>
+                <artifactId>poom-services-logging-json-layout</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -112,5 +123,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -14,13 +14,13 @@ services:
     image: localhost:5000/codingmatters/flexio-api-documentation-service:1.0.0-SNAPSHOT
     ports:
       - "8081:80"
-      #- "5005:5005" #debugueur
+      - "5005:5005" #debugueur
     environment:
       STORAGE_DIR: /var/data
       MANIFEST_DIR: /var/manifests
       TMP_DIR: /tmp
       LOG_LEVEL: TRACE
-      #JVM_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" #debugueur
+      JVM_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005" #debugueur
     volumes:
       - doc_storage_data:/var/data
       - doc_manifest_data:/var/manifests
